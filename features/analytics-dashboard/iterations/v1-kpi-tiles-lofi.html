@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Product Health — KPI tiles + hero chart (lofi)</title>
+<style>
+  :root {
+    --grey-900: #111111;
+    --grey-700: #444444;
+    --grey-500: #767676;
+    --grey-300: #c4c4c4;
+    --grey-200: #dcdcdc;
+    --grey-100: #eeeeee;
+    --grey-50:  #f7f7f7;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--grey-100);
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: var(--grey-900);
+  }
+
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 40px 56px;
+  }
+
+  /* ---------- header ---------- */
+
+  header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--grey-500);
+    margin: 0 0 6px;
+  }
+
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .header-meta {
+    text-align: right;
+    font-size: 12px;
+    color: var(--grey-500);
+  }
+
+  .header-meta strong {
+    display: block;
+    font-size: 13px;
+    color: var(--grey-700);
+    font-weight: 600;
+  }
+
+  /* ---------- KPI tile row ---------- */
+
+  .tile-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+
+  .tile {
+    background: #fff;
+    border: 1px solid var(--grey-300);
+    border-radius: 4px;
+    padding: 18px 20px 16px;
+    position: relative;
+  }
+
+  .tile.is-active {
+    background: var(--grey-50);
+    border: 2px solid var(--grey-900);
+    padding: 17px 19px 15px; /* compensate for thicker border so grid stays aligned */
+  }
+
+  .tile-select-flag {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    background: var(--grey-900);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    border-radius: 0 3px 0 4px;
+  }
+
+  .tile-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--grey-500);
+    margin: 0 0 8px;
+  }
+
+  .tile-value {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    margin: 0 0 8px;
+  }
+
+  .tile-delta {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12.5px;
+    color: var(--grey-700);
+    margin-bottom: 12px;
+  }
+
+  .tile-delta .arrow {
+    font-size: 10px;
+  }
+
+  .tile-delta .amt {
+    font-weight: 700;
+    color: var(--grey-900);
+  }
+
+  .tile-delta .qualifier {
+    color: var(--grey-500);
+  }
+
+  .risk-tag {
+    display: inline-block;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border: 1px dashed var(--grey-900);
+    border-radius: 3px;
+    padding: 1px 5px;
+    margin-left: 2px;
+  }
+
+  .tile-spark {
+    display: block;
+    width: 100%;
+    height: 36px;
+    overflow: visible;
+  }
+
+  .tile-spark .line {
+    fill: none;
+    stroke: var(--grey-700);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .tile-spark .line.anomaly {
+    stroke: var(--grey-900);
+    stroke-width: 2.2;
+    stroke-dasharray: 3 2;
+  }
+
+  .tile-spark .dot-current {
+    fill: #fff;
+    stroke: var(--grey-900);
+    stroke-width: 1.4;
+  }
+
+  .tile-spark .dot-peak {
+    fill: var(--grey-900);
+  }
+
+  .tile-foot {
+    font-size: 10.5px;
+    color: var(--grey-500);
+    margin-top: 6px;
+  }
+
+  /* ---------- hero chart ---------- */
+
+  .hero {
+    background: #fff;
+    border: 1px solid var(--grey-300);
+    border-radius: 4px;
+    padding: 24px 28px 20px;
+  }
+
+  .hero-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .hero-title-group .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--grey-500);
+    margin: 0 0 4px;
+  }
+
+  .hero-title-group h2 {
+    font-size: 19px;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .hero-value-group {
+    text-align: right;
+  }
+
+  .hero-value {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-delta {
+    font-size: 13px;
+    color: var(--grey-700);
+    margin-top: 4px;
+  }
+
+  .hero-delta .amt {
+    font-weight: 700;
+    color: var(--grey-900);
+  }
+
+  .hero-chart-wrap {
+    margin-top: 14px;
+  }
+
+  .hero-chart-wrap svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .axis-label {
+    font-size: 10.5px;
+    fill: var(--grey-500);
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  .gridline {
+    stroke: var(--grey-200);
+    stroke-width: 1;
+  }
+
+  .baseline-line {
+    stroke: var(--grey-200);
+    stroke-width: 1;
+  }
+
+  .series-line {
+    fill: none;
+    stroke: var(--grey-700);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .series-line.anomaly {
+    stroke: var(--grey-900);
+    stroke-width: 3;
+    stroke-dasharray: 5 3;
+  }
+
+  .anomaly-band {
+    fill: var(--grey-100);
+  }
+
+  .peak-dot {
+    fill: var(--grey-900);
+    stroke: #fff;
+    stroke-width: 2;
+  }
+
+  .callout-line {
+    stroke: var(--grey-900);
+    stroke-width: 1;
+  }
+
+  .callout-box {
+    fill: #fff;
+    stroke: var(--grey-900);
+    stroke-width: 1.2;
+  }
+
+  .callout-text {
+    font-size: 11px;
+    fill: var(--grey-900);
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  .callout-text.strong {
+    font-weight: 700;
+  }
+
+  .hero-legend {
+    display: flex;
+    gap: 22px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--grey-200);
+    font-size: 11.5px;
+    color: var(--grey-700);
+  }
+
+  .hero-legend .key {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .hero-legend svg { flex: none; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div>
+      <p class="eyebrow">Product Health · Ops dashboard</p>
+      <h1>Daily overview</h1>
+    </div>
+    <div class="header-meta">
+      <strong>Last 30 days</strong>
+      vs. prior 30-day period
+    </div>
+  </header>
+
+  <!-- ============ KPI TILE ROW ============ -->
+  <div class="tile-row">
+
+    <div class="tile">
+      <p class="tile-label">New signups</p>
+      <p class="tile-value">4,850</p>
+      <div class="tile-delta">
+        <span class="arrow">&#9650;</span>
+        <span class="amt">+18%</span>
+        <span class="qualifier">vs prior period &middot; better</span>
+      </div>
+      <svg class="tile-spark" viewBox="0 0 120 36" preserveAspectRatio="none">
+        <polyline class="line" points="4.0,30.2 7.9,29.4 11.7,28.5 15.6,27.6 19.4,26.8 23.3,32.0 27.2,31.1 31.0,24.1 34.9,22.8 38.8,21.9 42.6,21.1 46.5,20.2 50.3,25.4 54.2,24.6 58.1,17.6 61.9,16.7 65.8,15.8 69.7,14.9 73.5,14.1 77.4,19.3 81.2,18.4 85.1,11.4 89.0,10.1 92.8,9.2 96.7,8.4 100.6,7.5 104.4,12.8 108.3,11.9 112.1,4.9 116.0,4.0"/>
+        <circle class="dot-current" cx="116.0" cy="4.0" r="2.4"/>
+      </svg>
+      <p class="tile-foot">30-day trend, daily count</p>
+    </div>
+
+    <div class="tile">
+      <p class="tile-label">Activation rate</p>
+      <p class="tile-value">64%</p>
+      <div class="tile-delta">
+        <span class="arrow">&#9650;</span>
+        <span class="amt">+1.2pt</span>
+        <span class="qualifier">vs prior period &middot; better</span>
+      </div>
+      <svg class="tile-spark" viewBox="0 0 120 36" preserveAspectRatio="none">
+        <polyline class="line" points="4.0,25.5 7.9,17.1 11.7,21.7 15.6,15.2 19.4,14.3 23.3,30.1 27.2,32.0 31.0,8.7 34.9,24.5 38.8,25.5 42.6,4.0 46.5,18.9 50.3,8.7 54.2,18.9 58.1,14.3 61.9,27.3 65.8,14.3 69.7,7.7 73.5,17.1 77.4,11.5 81.2,13.3 85.1,30.1 89.0,10.5 92.8,15.2 96.7,23.6 100.6,31.1 104.4,7.7 108.3,18.9 112.1,11.5 116.0,7.7"/>
+        <circle class="dot-current" cx="116.0" cy="7.7" r="2.4"/>
+      </svg>
+      <p class="tile-foot">30-day trend, daily %</p>
+    </div>
+
+    <div class="tile">
+      <p class="tile-label">MRR</p>
+      <p class="tile-value">$158.2k</p>
+      <div class="tile-delta">
+        <span class="arrow">&#9650;</span>
+        <span class="amt">+9.4%</span>
+        <span class="qualifier">vs prior period &middot; better</span>
+      </div>
+      <svg class="tile-spark" viewBox="0 0 120 36" preserveAspectRatio="none">
+        <polyline class="line" points="4.0,32.0 7.9,31.0 11.7,30.1 15.6,29.1 19.4,28.1 23.3,27.2 27.2,26.2 31.0,25.2 34.9,24.3 38.8,23.3 42.6,22.3 46.5,21.4 50.3,20.4 54.2,19.4 58.1,18.5 61.9,17.5 65.8,16.6 69.7,15.6 73.5,14.6 77.4,13.7 81.2,12.7 85.1,11.7 89.0,10.8 92.8,9.8 96.7,8.8 100.6,7.9 104.4,6.9 108.3,5.9 112.1,5.0 116.0,4.0"/>
+        <circle class="dot-current" cx="116.0" cy="4.0" r="2.4"/>
+      </svg>
+      <p class="tile-foot">30-day trend, daily $</p>
+    </div>
+
+    <div class="tile is-active">
+      <span class="tile-select-flag">Selected</span>
+      <p class="tile-label">Churn rate</p>
+      <p class="tile-value">2.3%</p>
+      <div class="tile-delta">
+        <span class="arrow">&#9650;</span>
+        <span class="amt">+0.6pt</span>
+        <span class="qualifier">vs prior period &middot; worse</span>
+        <span class="risk-tag">Risk</span>
+      </div>
+      <svg class="tile-spark" viewBox="0 0 120 36" preserveAspectRatio="none">
+        <polyline class="line" points="4.0,32.0 7.9,31.7 11.7,31.9 15.6,31.4 19.4,31.6 23.3,31.0 27.2,30.8 31.0,31.3 34.9,31.2 38.8,30.9 42.6,30.1 46.5,30.4 50.3,30.1"/>
+        <polyline class="line anomaly" points="50.3,30.1 54.2,23.1 58.1,14.8 61.9,4.0 65.8,6.5 69.7,14.8 73.5,19.7 77.4,24.7"/>
+        <polyline class="line" points="77.4,24.7 81.2,25.3 85.1,25.9 89.0,26.4 92.8,27.0 96.7,27.6 100.6,28.2 104.4,28.8 108.3,29.3 112.1,29.9 116.0,30.5"/>
+        <circle class="dot-peak" cx="61.9" cy="4.0" r="3"/>
+        <circle class="dot-current" cx="116.0" cy="30.5" r="2.4"/>
+      </svg>
+      <p class="tile-foot">30-day trend, daily % &middot; dashed = anomaly window</p>
+    </div>
+
+  </div>
+
+  <!-- ============ HERO CHART ============ -->
+  <div class="hero">
+    <div class="hero-head">
+      <div class="hero-title-group">
+        <p class="hero-eyebrow">Selected metric &middot; detail view</p>
+        <h2>Churn rate (%) — last 30 days</h2>
+      </div>
+      <div class="hero-value-group">
+        <div class="hero-value">2.3%</div>
+        <div class="hero-delta"><span class="amt">+0.6pt</span> vs prior period</div>
+      </div>
+    </div>
+
+    <div class="hero-chart-wrap">
+      <svg viewBox="0 0 600 210" preserveAspectRatio="none">
+        <!-- anomaly band background -->
+        <rect class="anomaly-band" x="251" y="10" width="106" height="160"></rect>
+
+        <!-- gridlines: value axis 2 / 3 / 4 / 5 / 6 -->
+        <line class="gridline" x1="40" y1="162.4" x2="550" y2="162.4"/>
+        <line class="gridline" x1="40" y1="124.3" x2="550" y2="124.3"/>
+        <line class="gridline" x1="40" y1="86.2"  x2="550" y2="86.2"/>
+        <line class="gridline" x1="40" y1="48.1"  x2="550" y2="48.1"/>
+        <line class="baseline-line" x1="40" y1="170" x2="550" y2="170"/>
+
+        <!-- y axis labels -->
+        <text class="axis-label" x="32" y="165.8" text-anchor="end">2%</text>
+        <text class="axis-label" x="32" y="127.7" text-anchor="end">3%</text>
+        <text class="axis-label" x="32" y="89.6"  text-anchor="end">4%</text>
+        <text class="axis-label" x="32" y="51.5"  text-anchor="end">5%</text>
+        <text class="axis-label" x="32" y="13.4"  text-anchor="end">6%</text>
+
+        <!-- x axis labels -->
+        <text class="axis-label" x="40"  y="188" text-anchor="middle">Day 1</text>
+        <text class="axis-label" x="163" y="188" text-anchor="middle">Day 8</text>
+        <text class="axis-label" x="286" y="188" text-anchor="middle">Day 15</text>
+        <text class="axis-label" x="409" y="188" text-anchor="middle">Day 22</text>
+        <text class="axis-label" x="532" y="188" text-anchor="middle">Day 29</text>
+
+        <!-- series: baseline segments solid, outage window dashed+heavier -->
+        <polyline class="series-line" points="40.0,157.81 57.59,156.29 75.17,157.43 92.76,155.14 110.34,155.9 127.93,153.24 145.52,152.48 163.1,154.76 180.69,154.0 198.28,152.86 215.86,149.05 233.45,150.57 251.03,149.05"/>
+        <polyline class="series-line anomaly" points="251.03,149.05 268.62,116.67 286.21,78.57 303.79,29.05 321.38,40.48 338.97,78.57 356.55,101.43 374.14,124.29"/>
+        <polyline class="series-line" points="374.14,124.29 391.72,126.95 409.31,129.62 426.9,132.29 444.48,134.95 462.07,137.62 479.66,140.29 497.24,142.95 514.83,145.62 532.41,148.29 550.0,150.95"/>
+
+        <!-- peak marker + callout -->
+        <circle class="peak-dot" cx="303.79" cy="29.05" r="4.5"/>
+        <line class="callout-line" x1="303.79" y1="29.05" x2="303.79" y2="18"/>
+        <line class="callout-line" x1="303.79" y1="18" x2="380" y2="18"/>
+        <rect class="callout-box" x="382" y="6" width="200" height="26" rx="3"/>
+        <text class="callout-text strong" x="392" y="17">Peak 5.5% — day 16</text>
+        <text class="callout-text" x="392" y="28">Billing outage (attributed)</text>
+      </svg>
+    </div>
+
+    <div class="hero-legend">
+      <span class="key">
+        <svg width="22" height="8"><line x1="1" y1="4" x2="21" y2="4" stroke="#444" stroke-width="2"/></svg>
+        Baseline
+      </span>
+      <span class="key">
+        <svg width="22" height="8"><line x1="1" y1="4" x2="21" y2="4" stroke="#111" stroke-width="3" stroke-dasharray="5 3"/></svg>
+        Anomaly window (day 13&ndash;21)
+      </span>
+      <span class="key">
+        <svg width="10" height="8"><circle cx="5" cy="4" r="4" fill="#111"/></svg>
+        Peak value
+      </span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

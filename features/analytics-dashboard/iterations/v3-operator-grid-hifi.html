@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Product Health — Operator Console</title>
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --surface: #141a2b;
+    --surface-2: #171f34;
+    --border: #232a3d;
+    --grid-line: #212840;
+    --text: #e5e7eb;
+    --text-muted: #8b93a7;
+    --text-faint: #5b6478;
+
+    --accent: #6366f1;   /* New signups */
+    --success: #22c55e;  /* MRR */
+    --warning: #f59e0b;  /* Activation rate */
+    --danger: #f87171;   /* Churn rate — risk metric */
+
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: radial-gradient(ellipse at top, #101527 0%, var(--bg) 55%);
+    color: var(--text);
+    font-family: var(--font-sans);
+  }
+
+  .console {
+    max-width: 1280px;
+    margin: 0 auto;
+    min-height: 100vh;
+    padding: 1.5rem 2.5rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  /* ---------- header ---------- */
+  .top-bar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1rem;
+  }
+
+  .top-bar h1 {
+    margin: 0 0 0.25rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+
+  .top-bar .subtitle {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .top-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 6px 1px rgba(34,197,94,0.6);
+    margin-right: 0.4rem;
+    vertical-align: middle;
+  }
+
+  .range-pill {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  /* ---------- grid ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1rem;
+    flex: 1;
+    min-height: 640px;
+  }
+
+  .panel {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 1rem 1.25rem 0.875rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.02) inset, 0 8px 24px -12px rgba(0,0,0,0.6);
+  }
+
+  .panel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--series-color);
+    opacity: 0.55;
+  }
+
+  .panel.risk {
+    border-color: rgba(248, 113, 113, 0.35);
+    box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.12), 0 0 32px -8px rgba(248, 113, 113, 0.28), 0 8px 24px -12px rgba(0,0,0,0.6);
+  }
+
+  .panel.risk::before {
+    opacity: 0.85;
+    box-shadow: 0 0 12px 0 rgba(248, 113, 113, 0.5);
+  }
+
+  .panel-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .metric-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .risk-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--danger);
+    background: rgba(248, 113, 113, 0.12);
+    border: 1px solid rgba(248, 113, 113, 0.3);
+    border-radius: 0.25rem;
+    padding: 0.1rem 0.4rem;
+    text-transform: uppercase;
+  }
+
+  .risk-badge svg { width: 9px; height: 9px; }
+
+  .panel-figures {
+    display: flex;
+    align-items: baseline;
+    gap: 0.625rem;
+  }
+
+  .value {
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.1rem 0.4rem;
+    border-radius: 0.25rem;
+    line-height: 1.3;
+  }
+
+  .delta.good { color: var(--success); background: rgba(34, 197, 94, 0.12); }
+  .delta.bad { color: var(--danger); background: rgba(248, 113, 113, 0.14); }
+
+  .delta svg { width: 8px; height: 8px; }
+  .delta.bad svg { transform: none; }
+
+  .panel-sub {
+    font-size: 0.75rem;
+    color: var(--text-faint);
+    margin-top: -0.25rem;
+  }
+
+  .chart-wrap {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+  }
+
+  .chart-wrap svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+  }
+
+  .gridline { stroke: var(--grid-line); stroke-width: 1; }
+
+  .series-line {
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .series-end {
+    stroke: var(--surface);
+    stroke-width: 1.5;
+  }
+
+  .anomaly-band { fill: rgba(248, 113, 113, 0.10); }
+  .anomaly-line { stroke: var(--danger); stroke-width: 1; stroke-dasharray: 2.5 2.5; opacity: 0.75; }
+  .anomaly-dot { fill: var(--danger); stroke: var(--surface); stroke-width: 1.2; }
+  .anomaly-label {
+    font-family: var(--font-sans);
+    font-size: 6.5px;
+    font-weight: 600;
+    fill: var(--danger);
+    letter-spacing: 0.02em;
+  }
+
+  /* ---------- footer note ---------- */
+  .footnote {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text-faint);
+    padding-top: 0.25rem;
+  }
+
+  .footnote a { color: var(--text-muted); }
+</style>
+</head>
+<body>
+<div class="console">
+
+  <div class="top-bar">
+    <div>
+      <h1>Product Health</h1>
+      <p class="subtitle">Ops &amp; Growth · daily monitor</p>
+    </div>
+    <div class="top-meta">
+      <span><span class="status-dot"></span>Live · updated 4 min ago</span>
+      <span class="range-pill">Last 30 days</span>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- New signups -->
+    <div class="panel" style="--series-color: var(--accent);">
+      <div class="panel-head">
+        <span class="metric-label">New signups</span>
+      </div>
+      <div class="panel-figures">
+        <span class="value">4,850</span>
+        <span class="delta good">
+          <svg viewBox="0 0 10 10"><polygon points="5,1 9,8 1,8" fill="currentColor"/></svg>
+          +18%
+        </span>
+      </div>
+      <div class="panel-sub">vs. prior 30 days</div>
+      <div class="chart-wrap">
+        <svg viewBox="0 0 280 90" preserveAspectRatio="none">
+          <line class="gridline" x1="4" y1="20" x2="276" y2="20"/>
+          <line class="gridline" x1="4" y1="45" x2="276" y2="45"/>
+          <line class="gridline" x1="4" y1="70" x2="276" y2="70"/>
+          <defs>
+            <linearGradient id="fillSignups" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#6366f1" stop-opacity="0.30"/>
+              <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <polygon fill="url(#fillSignups)" points="4,74.62 13.38,69.23 22.76,68.15 32.14,70.31 41.52,68.15 50.9,80 60.28,74.62 69.66,58.46 79.03,59.54 88.41,57.38 97.79,50.92 107.17,46.62 116.55,66 125.93,68.15 135.31,45.54 144.69,39.08 154.07,35.85 163.45,36.92 172.83,38 182.21,54.15 191.59,48.77 200.97,25.08 210.34,26.15 219.72,26.15 229.1,21.85 238.48,16.46 247.86,36.92 257.24,39.08 266.62,15.38 276,10 276,90 4,90"/>
+          <polyline class="series-line" stroke="var(--accent)" points="4,74.62 13.38,69.23 22.76,68.15 32.14,70.31 41.52,68.15 50.9,80 60.28,74.62 69.66,58.46 79.03,59.54 88.41,57.38 97.79,50.92 107.17,46.62 116.55,66 125.93,68.15 135.31,45.54 144.69,39.08 154.07,35.85 163.45,36.92 172.83,38 182.21,54.15 191.59,48.77 200.97,25.08 210.34,26.15 219.72,26.15 229.1,21.85 238.48,16.46 247.86,36.92 257.24,39.08 266.62,15.38 276,10"/>
+          <circle class="series-end" cx="276" cy="10" r="3" fill="var(--accent)"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Activation rate -->
+    <div class="panel" style="--series-color: var(--warning);">
+      <div class="panel-head">
+        <span class="metric-label">Activation rate</span>
+      </div>
+      <div class="panel-figures">
+        <span class="value">64%</span>
+        <span class="delta good">
+          <svg viewBox="0 0 10 10"><polygon points="5,1 9,8 1,8" fill="currentColor"/></svg>
+          +1.2pt
+        </span>
+      </div>
+      <div class="panel-sub">vs. prior 30 days</div>
+      <div class="chart-wrap">
+        <svg viewBox="0 0 280 90" preserveAspectRatio="none">
+          <line class="gridline" x1="4" y1="20" x2="276" y2="20"/>
+          <line class="gridline" x1="4" y1="45" x2="276" y2="45"/>
+          <line class="gridline" x1="4" y1="70" x2="276" y2="70"/>
+          <defs>
+            <linearGradient id="fillActivation" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.28"/>
+              <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <polygon fill="url(#fillActivation)" points="4,32 13.38,16 22.76,10 32.14,18 41.52,36 50.9,58 60.28,76 69.66,80 79.03,72 88.41,54 97.79,34 107.17,22 116.55,20 125.93,30 135.31,44 144.69,56 154.07,58 163.45,50 172.83,36 182.21,24 191.59,20 200.97,28 210.34,46 219.72,66 229.1,78 238.48,80 247.86,66 257.24,46 266.62,24 276,12 276,90 4,90"/>
+          <polyline class="series-line" stroke="var(--warning)" points="4,32 13.38,16 22.76,10 32.14,18 41.52,36 50.9,58 60.28,76 69.66,80 79.03,72 88.41,54 97.79,34 107.17,22 116.55,20 125.93,30 135.31,44 144.69,56 154.07,58 163.45,50 172.83,36 182.21,24 191.59,20 200.97,28 210.34,46 219.72,66 229.1,78 238.48,80 247.86,66 257.24,46 266.62,24 276,12"/>
+          <circle class="series-end" cx="276" cy="12" r="3" fill="var(--warning)"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- MRR -->
+    <div class="panel" style="--series-color: var(--success);">
+      <div class="panel-head">
+        <span class="metric-label">MRR</span>
+      </div>
+      <div class="panel-figures">
+        <span class="value">$158,200</span>
+        <span class="delta good">
+          <svg viewBox="0 0 10 10"><polygon points="5,1 9,8 1,8" fill="currentColor"/></svg>
+          +9.4%
+        </span>
+      </div>
+      <div class="panel-sub">vs. prior 30 days</div>
+      <div class="chart-wrap">
+        <svg viewBox="0 0 280 90" preserveAspectRatio="none">
+          <line class="gridline" x1="4" y1="20" x2="276" y2="20"/>
+          <line class="gridline" x1="4" y1="45" x2="276" y2="45"/>
+          <line class="gridline" x1="4" y1="70" x2="276" y2="70"/>
+          <defs>
+            <linearGradient id="fillMrr" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#22c55e" stop-opacity="0.30"/>
+              <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <polygon fill="url(#fillMrr)" points="4,80 13.38,76.78 22.76,74.19 32.14,72.39 41.52,70.94 50.9,69.12 60.28,66.52 69.66,63.3 79.03,60.09 88.41,57.51 97.79,55.73 107.17,54.27 116.55,52.45 125.93,49.83 135.31,46.6 144.69,43.39 154.07,40.84 163.45,39.06 172.83,37.6 182.21,35.76 191.59,33.13 200.97,29.89 210.34,26.7 219.72,24.15 229.1,22.39 238.48,20.93 247.86,19.08 257.24,16.43 266.62,13.19 276,10 276,90 4,90"/>
+          <polyline class="series-line" stroke="var(--success)" points="4,80 13.38,76.78 22.76,74.19 32.14,72.39 41.52,70.94 50.9,69.12 60.28,66.52 69.66,63.3 79.03,60.09 88.41,57.51 97.79,55.73 107.17,54.27 116.55,52.45 125.93,49.83 135.31,46.6 144.69,43.39 154.07,40.84 163.45,39.06 172.83,37.6 182.21,35.76 191.59,33.13 200.97,29.89 210.34,26.7 219.72,24.15 229.1,22.39 238.48,20.93 247.86,19.08 257.24,16.43 266.62,13.19 276,10"/>
+          <circle class="series-end" cx="276" cy="10" r="3" fill="var(--success)"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Churn rate (risk) -->
+    <div class="panel risk" style="--series-color: var(--danger);">
+      <div class="panel-head">
+        <span class="metric-label">Churn rate</span>
+        <span class="risk-badge">
+          <svg viewBox="0 0 10 10"><path d="M5 0.5 L9.5 9 H0.5 Z" fill="none" stroke="currentColor" stroke-width="1"/><rect x="4.5" y="3.5" width="1" height="3" fill="currentColor"/><rect x="4.5" y="7" width="1" height="1" fill="currentColor"/></svg>
+          Risk
+        </span>
+      </div>
+      <div class="panel-figures">
+        <span class="value">2.3%</span>
+        <span class="delta bad">
+          <svg viewBox="0 0 10 10"><polygon points="5,1 9,8 1,8" fill="currentColor"/></svg>
+          +0.6pt
+        </span>
+      </div>
+      <div class="panel-sub">period avg pulled up by day 15–17 spike</div>
+      <div class="chart-wrap">
+        <svg viewBox="0 0 280 90" preserveAspectRatio="none">
+          <line class="gridline" x1="4" y1="20" x2="276" y2="20"/>
+          <line class="gridline" x1="4" y1="45" x2="276" y2="45"/>
+          <line class="gridline" x1="4" y1="70" x2="276" y2="70"/>
+          <defs>
+            <linearGradient id="fillChurn" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f87171" stop-opacity="0.30"/>
+              <stop offset="100%" stop-color="#f87171" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <rect class="anomaly-band" x="116.55" y="0" width="56.28" height="90"/>
+          <polygon fill="url(#fillChurn)" points="4,77.04 13.38,75.66 22.76,74.48 32.14,74.08 41.52,74.28 50.9,75.27 60.28,76.65 69.66,78.03 79.03,79.21 88.41,80 97.79,79.8 107.17,79.21 116.55,67.18 125.93,35.63 135.31,10 144.69,15.92 154.07,39.58 163.45,55.55 172.83,57.52 182.21,59.49 191.59,61.66 200.97,63.63 210.34,65.21 219.72,66.2 229.1,67.18 238.48,67.77 247.86,68.37 257.24,69.15 266.62,70.14 276,71 276,90 4,90"/>
+          <polyline class="series-line" stroke="var(--danger)" points="4,77.04 13.38,75.66 22.76,74.48 32.14,74.08 41.52,74.28 50.9,75.27 60.28,76.65 69.66,78.03 79.03,79.21 88.41,80 97.79,79.8 107.17,79.21 116.55,67.18 125.93,35.63 135.31,10 144.69,15.92 154.07,39.58 163.45,55.55 172.83,57.52 182.21,59.49 191.59,61.66 200.97,63.63 210.34,65.21 219.72,66.2 229.1,67.18 238.48,67.77 247.86,68.37 257.24,69.15 266.62,70.14 276,71"/>
+          <line class="anomaly-line" x1="135.31" y1="4" x2="135.31" y2="90"/>
+          <circle class="anomaly-dot" cx="135.31" cy="10" r="2.6"/>
+          <text class="anomaly-label" x="139" y="8" text-anchor="start">billing outage</text>
+          <circle class="series-end" cx="276" cy="71" r="3" fill="var(--danger)"/>
+        </svg>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footnote">
+    <span>4 core metrics · 30-day trailing window</span>
+    <span>Churn spike (day 15–17) attributed to billing system outage, since resolved</span>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics Dashboard — v2 anomaly-first (lofi)</title>
+<style>
+  :root {
+    --grey-900: #111111;
+    --grey-700: #404040;
+    --grey-500: #737373;
+    --grey-300: #bdbdbd;
+    --grey-200: #e0e0e0;
+    --grey-100: #f0f0f0;
+    --grey-50:  #fafafa;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--grey-100);
+    color: var(--grey-900);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px 56px;
+  }
+
+  /* ---------- top bar ---------- */
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--grey-300);
+    margin-bottom: 28px;
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .logo-box {
+    width: 30px;
+    height: 30px;
+    border: 1.5px solid var(--grey-900);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex: 0 0 auto;
+  }
+
+  .app-title {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+
+  .nav {
+    display: flex;
+    gap: 20px;
+    font-size: 13px;
+    color: var(--grey-500);
+  }
+
+  .nav span {
+    padding-bottom: 6px;
+  }
+
+  .nav span.active {
+    color: var(--grey-900);
+    font-weight: 600;
+    border-bottom: 2px solid var(--grey-900);
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .range-pill {
+    font-size: 12px;
+    color: var(--grey-700);
+    border: 1px solid var(--grey-300);
+    border-radius: 20px;
+    padding: 6px 14px;
+  }
+
+  .avatar-box {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--grey-400, var(--grey-300));
+    background: var(--grey-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--grey-700);
+  }
+
+  /* ---------- hero (anomaly) ---------- */
+
+  .hero-card {
+    background: #ffffff;
+    border: 1px solid var(--grey-300);
+    border-radius: 10px;
+    padding: 28px 32px 20px;
+    margin-bottom: 22px;
+  }
+
+  .hero-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .hero-label-group .hero-eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--grey-500);
+    margin: 0 0 8px;
+  }
+
+  .hero-value-row {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+
+  .hero-value {
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-caption {
+    font-size: 13px;
+    color: var(--grey-500);
+    margin-top: 6px;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 12px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  .tag-risk {
+    border: 2px dashed var(--grey-900);
+    color: var(--grey-900);
+  }
+
+  .tag-risk .tag-glyph {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--grey-900);
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .flag-note {
+    font-size: 12px;
+    color: var(--grey-700);
+    max-width: 260px;
+    text-align: right;
+    line-height: 1.4;
+  }
+
+  .hero-chart-wrap {
+    width: 100%;
+  }
+
+  .hero-chart-wrap svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .axis-label {
+    font-size: 11px;
+    fill: var(--grey-500);
+  }
+
+  .gridline {
+    stroke: var(--grey-200);
+    stroke-width: 1;
+  }
+
+  .series-normal {
+    fill: none;
+    stroke: var(--grey-900);
+    stroke-width: 2;
+  }
+
+  .series-anomaly {
+    fill: none;
+    stroke: var(--grey-900);
+    stroke-width: 4;
+    stroke-dasharray: 7 4;
+    stroke-linecap: round;
+  }
+
+  .marker-peak {
+    fill: var(--grey-900);
+    stroke: #ffffff;
+    stroke-width: 2;
+  }
+
+  .marker-bound {
+    fill: #ffffff;
+    stroke: var(--grey-900);
+    stroke-width: 2;
+  }
+
+  .connector-line {
+    stroke: var(--grey-900);
+    stroke-width: 1.5;
+    stroke-dasharray: 3 3;
+  }
+
+  .callout-box {
+    fill: #ffffff;
+    stroke: var(--grey-900);
+    stroke-width: 2;
+  }
+
+  .callout-title {
+    font-size: 13px;
+    font-weight: 700;
+    fill: var(--grey-900);
+  }
+
+  .callout-body {
+    font-size: 11.5px;
+    fill: var(--grey-700);
+  }
+
+  /* ---------- demoted strip ---------- */
+
+  .strip-heading {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--grey-500);
+    margin: 0 0 10px 2px;
+  }
+
+  .strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .mini-card {
+    background: #ffffff;
+    border: 1px solid var(--grey-300);
+    border-radius: 8px;
+    padding: 16px 18px;
+  }
+
+  .mini-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--grey-500);
+    margin: 0 0 6px;
+  }
+
+  .mini-value-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+
+  .mini-value {
+    font-size: 27px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .mini-delta {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--grey-700);
+  }
+
+  .mini-delta .delta-glyph {
+    display: inline-block;
+    margin-right: 2px;
+  }
+
+  .mini-caption {
+    font-size: 11px;
+    color: var(--grey-500);
+    margin-bottom: 10px;
+  }
+
+  .mini-spark svg {
+    display: block;
+    width: 100%;
+    height: 40px;
+  }
+
+  .spark-line {
+    fill: none;
+    stroke: var(--grey-700);
+    stroke-width: 1.75;
+  }
+
+  .spark-dot {
+    fill: var(--grey-900);
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="logo-box">DB</div>
+      <div class="app-title">Analytics Dashboard</div>
+      <nav class="nav">
+        <span class="active">Overview</span>
+        <span>Signups</span>
+        <span>Revenue</span>
+        <span>Churn</span>
+      </nav>
+    </div>
+    <div class="topbar-right">
+      <div class="range-pill">Last 30 days ▾</div>
+      <div class="avatar-box">OA</div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ================= HERO: anomaly chart ================= -->
+    <section class="hero-card">
+      <div class="hero-head">
+        <div class="hero-label-group">
+          <p class="hero-eyebrow">Churn rate — needs attention</p>
+          <div class="hero-value-row">
+            <span class="hero-value">2.3%</span>
+            <span class="tag tag-risk">
+              <span class="tag-glyph">!</span>
+              +0.6pt vs prior period
+            </span>
+          </div>
+          <p class="hero-caption">End-of-period value shown above — the period average was pulled up by the spike below.</p>
+        </div>
+        <p class="flag-note">The only metric moving the wrong direction this period. Flagged for review.</p>
+      </div>
+
+      <div class="hero-chart-wrap">
+        <svg viewBox="0 0 900 300" preserveAspectRatio="xMidYMid meet">
+
+          <!-- gridlines -->
+          <line class="gridline" x1="40" y1="85" x2="880" y2="85" />
+          <line class="gridline" x1="40" y1="135" x2="880" y2="135" />
+          <line class="gridline" x1="40" y1="185" x2="880" y2="185" />
+          <line class="gridline" x1="40" y1="235" x2="880" y2="235" />
+          <text class="axis-label" x="0" y="89">5%</text>
+          <text class="axis-label" x="0" y="139">4%</text>
+          <text class="axis-label" x="0" y="189">3%</text>
+          <text class="axis-label" x="0" y="239">2%</text>
+
+          <!-- baseline axis -->
+          <line class="gridline" x1="40" y1="260" x2="880" y2="260" />
+
+          <!-- normal segment: day 1-14 -->
+          <path class="series-normal" d="M40,235 L69,225 L97.9,230 L126.9,240 L155.9,225 L184.8,220 L213.8,235 L242.8,230 L271.7,225 L300.7,240 L329.7,230 L358.6,235 L387.6,225 L416.6,230" />
+
+          <!-- anomaly segment: day 14-18 (billing outage window) -->
+          <path class="series-anomaly" d="M416.6,230 L445.5,165 L474.5,60 L503.4,80 L532.4,140" />
+
+          <!-- recovery / normal segment: day 18-30 -->
+          <path class="series-normal" d="M532.4,140 L561.4,185 L590.3,205 L619.3,215 L648.3,220 L677.2,225 L706.2,220 L735.2,230 L764.1,225 L793.1,235 L822.1,225 L851.0,230 L880,220" />
+
+          <!-- anomaly window boundary markers -->
+          <circle class="marker-bound" cx="445.5" cy="165" r="4.5" />
+          <circle class="marker-bound" cx="532.4" cy="140" r="4.5" />
+          <!-- peak marker -->
+          <circle class="marker-peak" cx="474.5" cy="60" r="7" />
+
+          <!-- callout connector -->
+          <line class="connector-line" x1="474.5" y1="60" x2="528" y2="42" />
+
+          <!-- callout box -->
+          <rect class="callout-box" x="528" y="10" width="234" height="58" rx="4" />
+          <text class="callout-title" x="542" y="32">Churn spike</text>
+          <text class="callout-body" x="542" y="50">Billing outage, days 15–17</text>
+
+          <!-- x-axis labels -->
+          <text class="axis-label" x="40" y="280">Day 1</text>
+          <text class="axis-label" x="428" y="280">Day 15</text>
+          <text class="axis-label" x="855" y="280">Day 30</text>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ================= demoted strip ================= -->
+    <p class="strip-heading">Also tracked this period</p>
+    <section class="strip">
+
+      <div class="mini-card">
+        <p class="mini-eyebrow">New signups</p>
+        <div class="mini-value-row">
+          <span class="mini-value">4,850</span>
+          <span class="mini-delta"><span class="delta-glyph">▲</span>+18%</span>
+        </div>
+        <p class="mini-caption">vs prior 30 days</p>
+        <div class="mini-spark">
+          <svg viewBox="0 0 160 40" preserveAspectRatio="none">
+            <polyline class="spark-line" points="0,34 11.4,30 22.9,35 34.3,26 45.7,23 57.1,28 68.6,20 80.0,16 91.4,22 102.9,14 114.3,9 125.7,15 137.1,7 148.6,4 160,3" />
+            <circle class="spark-dot" cx="160" cy="3" r="2.5" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="mini-card">
+        <p class="mini-eyebrow">Activation rate</p>
+        <div class="mini-value-row">
+          <span class="mini-value">64%</span>
+          <span class="mini-delta"><span class="delta-glyph">▲</span>+1.2pt</span>
+        </div>
+        <p class="mini-caption">vs prior 30 days</p>
+        <div class="mini-spark">
+          <svg viewBox="0 0 160 40" preserveAspectRatio="none">
+            <polyline class="spark-line" points="0,22 11.4,16 22.9,28 34.3,10 45.7,22 57.1,16 68.6,22 80.0,10 91.4,16 102.9,22 114.3,10 125.7,16 137.1,22 148.6,16 160,16" />
+            <circle class="spark-dot" cx="160" cy="16" r="2.5" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="mini-card">
+        <p class="mini-eyebrow">MRR</p>
+        <div class="mini-value-row">
+          <span class="mini-value">$158.2k</span>
+          <span class="mini-delta"><span class="delta-glyph">▲</span>+9.4%</span>
+        </div>
+        <p class="mini-caption">vs prior 30 days</p>
+        <div class="mini-spark">
+          <svg viewBox="0 0 160 40" preserveAspectRatio="none">
+            <polyline class="spark-line" points="0,36 11.4,33 22.9,30 34.3,27 45.7,25 57.1,22 68.6,19 80.0,16 91.4,13 102.9,11 114.3,9 125.7,7 137.1,6 148.6,5 160,5" />
+            <circle class="spark-dot" cx="160" cy="5" r="2.5" />
+          </svg>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+</div>
+</body>
+</html>
