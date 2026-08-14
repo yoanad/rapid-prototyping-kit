@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in — v2 split-screen (lofi)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #111827;
+    background: #ffffff;
+  }
+
+  .screen {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+  }
+
+  /* ---------- LEFT: form ---------- */
+
+  .form-side {
+    flex: 0 0 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    background: #ffffff;
+  }
+
+  .form-wrap {
+    width: 100%;
+    max-width: 380px;
+  }
+
+  .brand-mark {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #111827;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #111827;
+    margin-bottom: 32px;
+  }
+
+  h1 {
+    font-size: 28px;
+    line-height: 1.2;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 8px;
+  }
+
+  .subhead {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 32px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #111827;
+  }
+
+  input[type="email"],
+  input[type="password"] {
+    height: 44px;
+    padding: 0 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 15px;
+    color: #111827;
+    background: #f9fafb;
+    outline: none;
+    font-family: inherit;
+  }
+
+  input[type="email"]:focus,
+  input[type="password"]:focus {
+    border-color: #6b7280;
+    background: #ffffff;
+  }
+
+  .field-row-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .link {
+    font-size: 13px;
+    color: #6b7280;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .btn {
+    height: 46px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-primary {
+    background: #111827;
+    color: #ffffff;
+    border: 1px solid #111827;
+    margin-top: 4px;
+  }
+
+  .btn-secondary {
+    background: #ffffff;
+    color: #111827;
+    border: 1px solid #e5e7eb;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 0;
+  }
+
+  .divider::before,
+  .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #e5e7eb;
+  }
+
+  .divider span {
+    font-size: 12px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .icon-box {
+    width: 20px;
+    height: 20px;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  .passkey-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #6b7280;
+    padding-top: 4px;
+  }
+
+  .passkey-row button {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: #111827;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .signup-line {
+    text-align: center;
+    font-size: 14px;
+    color: #6b7280;
+    margin-top: 28px;
+  }
+
+  .signup-line a {
+    color: #111827;
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  /* ---------- RIGHT: glass / product panel ---------- */
+
+  .glass-side {
+    flex: 0 0 50%;
+    position: relative;
+    overflow: hidden;
+    background: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* abstract "product" shapes sitting behind the glass */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(2px);
+  }
+
+  .blob-a {
+    width: 380px;
+    height: 380px;
+    top: -60px;
+    left: -80px;
+    background: #6b7280;
+    opacity: 0.35;
+  }
+
+  .blob-b {
+    width: 320px;
+    height: 320px;
+    bottom: -80px;
+    right: -60px;
+    background: #111827;
+    opacity: 0.25;
+    border-radius: 42% 58% 60% 40% / 45% 45% 55% 55%;
+  }
+
+  .blob-c {
+    width: 220px;
+    height: 220px;
+    top: 38%;
+    left: 30%;
+    background: #9ca3af;
+    opacity: 0.3;
+    border-radius: 38% 62% 55% 45% / 55% 40% 60% 45%;
+  }
+
+  .card-ghost {
+    position: absolute;
+    width: 220px;
+    height: 140px;
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: 10px;
+    background: rgba(255,255,255,0.08);
+  }
+
+  .card-ghost.c1 { top: 18%; right: 14%; transform: rotate(-6deg); }
+  .card-ghost.c2 { bottom: 16%; left: 10%; transform: rotate(4deg); width: 180px; height: 110px; }
+
+  /* frosted glass layers on top of the shapes */
+  .glass-layer {
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(28px);
+    background: rgba(255, 255, 255, 0.28);
+  }
+
+  .glass-panel {
+    position: relative;
+    z-index: 2;
+    width: 72%;
+    max-width: 420px;
+    aspect-ratio: 4 / 5;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 20px 60px rgba(17, 24, 39, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .glass-panel-inner {
+    text-align: center;
+    color: #374151;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  /* mobile note: below ~720px this two-column screen stacks —
+     glass panel on top (shorter), form below, full width.
+     Rendering desktop split-screen state only for this static mockup. */
+</style>
+</head>
+<body>
+
+<div class="screen">
+
+  <div class="form-side">
+    <div class="form-wrap">
+
+      <div class="brand-mark">CO</div>
+
+      <h1>Sign in</h1>
+      <p class="subhead">Enter your details to continue.</p>
+
+      <form>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="you@company.com" autocomplete="username">
+        </div>
+
+        <div class="field">
+          <div class="field-row-top">
+            <label for="password">Password</label>
+            <button type="button" class="link">Forgot password?</button>
+          </div>
+          <input id="password" type="password" placeholder="••••••••" autocomplete="current-password">
+        </div>
+
+        <button type="button" class="btn btn-primary">Continue</button>
+
+        <div class="passkey-row">
+          <span class="icon-box">ID</span>
+          <button type="button">Sign in with passkey</button>
+        </div>
+
+        <div class="divider"><span>or</span></div>
+
+        <button type="button" class="btn btn-secondary">
+          <span class="icon-box">SSO</span>
+          Continue with SSO
+        </button>
+      </form>
+
+      <p class="signup-line">No account? <a href="#">Sign up</a></p>
+
+    </div>
+  </div>
+
+  <div class="glass-side">
+    <div class="blob blob-a"></div>
+    <div class="blob blob-b"></div>
+    <div class="blob blob-c"></div>
+    <div class="card-ghost c1"></div>
+    <div class="card-ghost c2"></div>
+    <div class="glass-layer"></div>
+    <div class="glass-panel">
+      <div class="glass-panel-inner">product preview</div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

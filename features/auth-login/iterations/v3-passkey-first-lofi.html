@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in — v3 passkey-first (lofi)</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #f3f4f6;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #111827;
+  }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 20px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 380px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 40px 32px;
+  }
+
+  .brand-box {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #111827;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    margin: 0 auto 24px;
+    color: #111827;
+  }
+
+  h1 {
+    font-size: 22px;
+    line-height: 1.3;
+    font-weight: 600;
+    margin: 0 0 6px;
+    text-align: center;
+    color: #111827;
+  }
+
+  .subtext {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #6b7280;
+    text-align: center;
+    margin: 0 0 28px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .field-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #374151;
+    letter-spacing: 0.02em;
+  }
+
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    height: 44px;
+    padding: 0 14px;
+    font-size: 15px;
+    font-family: inherit;
+    color: #111827;
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+  }
+
+  input::placeholder {
+    color: #9ca3af;
+  }
+
+  input[type="email"]:focus,
+  input[type="password"]:focus {
+    outline: none;
+    border-color: #6b7280;
+    background: #ffffff;
+  }
+
+  /* --- primary path: passkey, unmissable size + weight + position --- */
+  .btn-passkey {
+    margin-top: 20px;
+    width: 100%;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: #111827;
+    color: #ffffff;
+    border: 1px solid #111827;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  /* plain fingerprint glyph, drawn with nested CSS arcs — no icon asset */
+  .fingerprint {
+    flex: none;
+    width: 22px;
+    height: 22px;
+    position: relative;
+  }
+
+  .fingerprint span {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    border: 2px solid #ffffff;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  .fingerprint span:nth-child(1) { width: 22px; height: 22px; }
+  .fingerprint span:nth-child(2) { width: 15px; height: 15px; }
+  .fingerprint span:nth-child(3) { width: 8px;  height: 8px; }
+
+  .hint {
+    text-align: center;
+    font-size: 12px;
+    color: #6b7280;
+    margin: 10px 0 24px;
+  }
+
+  /* --- fallback zone: visually quiet, small type, no borders/boxes --- */
+  .fallback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .fallback-link {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 13px;
+    color: #6b7280;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .divider-thin {
+    width: 32px;
+    height: 1px;
+    background: #e5e7eb;
+    margin: 2px 0;
+  }
+
+  /* hidden by default: passkey-first means password entry starts collapsed */
+  .password-field {
+    display: none;
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  .password-field .field {
+    margin-bottom: 10px;
+  }
+
+  .btn-sm {
+    width: 100%;
+    height: 40px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    background: #ffffff;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    cursor: pointer;
+  }
+
+  .links-row {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 24px;
+    font-size: 12px;
+  }
+
+  .links-row a {
+    color: #9ca3af;
+    text-decoration: underline;
+  }
+
+  .signup {
+    text-align: center;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #f3f4f6;
+    font-size: 13px;
+    color: #9ca3af;
+  }
+
+  .signup a {
+    color: #6b7280;
+    font-weight: 600;
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="brand-box">Co</div>
+    <h1>Sign in</h1>
+    <p class="subtext">Enter your email to continue</p>
+
+    <form>
+      <div class="field">
+        <span class="field-label">Email</span>
+        <input type="email" placeholder="you@company.com" value="you@company.com">
+      </div>
+
+      <!-- PRIMARY: passkey is the hero action, biggest + boldest control on screen -->
+      <button type="button" class="btn-passkey">
+        <span class="fingerprint">
+          <span></span><span></span><span></span>
+        </span>
+        Continue with passkey
+      </button>
+      <p class="hint">Use Face ID, fingerprint, or your device screen lock</p>
+
+      <!-- demoted fallback zone: plain text links, no button chrome -->
+      <div class="fallback">
+        <button type="button" class="fallback-link" onclick="document.getElementById('pw').style.display='block'; this.style.display='none';">
+          Use a password instead
+        </button>
+        <div class="divider-thin"></div>
+        <button type="button" class="fallback-link">Continue with SSO</button>
+      </div>
+
+      <!-- password fallback: collapsed by default, this is the passkey-first state -->
+      <div class="password-field" id="pw">
+        <div class="field">
+          <span class="field-label">Password</span>
+          <input type="password" placeholder="Password">
+        </div>
+        <button type="button" class="btn-sm">Sign in with password</button>
+      </div>
+
+      <div class="links-row">
+        <a href="#">Forgot password?</a>
+      </div>
+    </form>
+
+    <p class="signup">No account? <a href="#">Sign up</a></p>
+  </div>
+
+</body>
+</html>

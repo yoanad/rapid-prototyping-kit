@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auth Login — Iterations</title>
+<style>
+  :root{
+    --accent:#4f46e5; --accent-dark:#4338ca;
+    --grey-50:#fafafa; --grey-100:#f0f0f0; --grey-200:#e0e0e0; --grey-300:#cfcfcf;
+    --grey-500:#8c8c8c; --grey-700:#525252; --grey-900:#1a1a1a;
+    --font: -apple-system, "Segoe UI", Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; font-family:var(--font); color:var(--grey-900); background:var(--grey-50);}
+  header.page-head{padding:0.7rem 1.75rem 0.55rem; border-bottom:1px solid var(--grey-200); background:#fff;}
+  header.page-head h1{font-size:0.9375rem; font-weight:700; margin:0 0 0.15rem;}
+  header.page-head p{margin:0; color:var(--grey-500); font-size:0.75rem; max-width:50rem;}
+
+  .tabs{display:flex; gap:0.3rem; padding:0.45rem 1.75rem 0; flex-wrap:wrap; background:#fff; border-bottom:1px solid var(--grey-200);}
+  .tab-btn{
+    appearance:none; border:1px solid var(--grey-200); background:var(--grey-100); color:var(--grey-700);
+    font-family:var(--font); font-size:0.75rem; font-weight:600; padding:0.4rem 0.8rem;
+    border-radius:0.4rem 0.4rem 0 0; cursor:pointer; margin-bottom:-1px;
+  }
+  .tab-btn.active{background:#fff; color:var(--grey-900); border-color:var(--grey-200); border-bottom-color:#fff;}
+
+  .panel{display:none; padding:0.6rem 1.75rem 1.25rem;}
+  .panel.active{display:block;}
+  .panel-desc{color:var(--grey-500); font-size:0.75rem; margin:0 0 0.5rem; max-width:50rem;}
+
+  .tier-row{display:flex; gap:0.5rem; align-items:center; margin-bottom:0.5rem; flex-wrap:wrap;}
+  .tier-btn{
+    appearance:none; display:inline-block; border:1px solid var(--grey-300); background:#fff; color:var(--grey-900);
+    font-family:var(--font); font-size:0.8125rem; font-weight:600; padding:0.45rem 1rem;
+    border-radius:0.4rem; cursor:pointer; text-decoration:none;
+  }
+  .tier-btn:hover{border-color:var(--accent); color:var(--accent);}
+  .tier-btn.active{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .tier-btn.legacy{color:var(--grey-500); border-style:dashed;}
+  .open-link{margin-left:auto; font-size:0.8125rem; font-weight:600; color:var(--accent); text-decoration:none;}
+  .open-link:hover{text-decoration:underline;}
+
+  .frame-wrap{border:1px solid var(--grey-200); border-radius:0.5rem; overflow:hidden; background:#fff;}
+  iframe{display:block; width:100%; height:88vh; border:none;}
+</style>
+</head>
+<body>
+  <header class="page-head">
+    <h1>Auth Login</h1>
+    <p>Sign-in screen for a web app: email/password, passkey, and SSO fallback — three directions on how those paths compete for attention.</p>
+  </header>
+
+  <div class="tabs" id="tabs"></div>
+  <div id="panels"></div>
+
+<script>
+  // Fill in one entry per angle/direction. `tiers` is ordered; the first
+  // entry is selected by default (put the tier you want shown on load
+  // first — usually hifi, or lofi if that's the point of the exercise).
+  // `legacy: true` on a tier renders it as a de-emphasized dashed pill
+  // (for old untiered files kept around after a lofi/hifi retrofit).
+  const ANGLES = [
+    {
+      name: "Direction 1: Progressive single-field",
+      description: "Starts with just an email field; password, SSO, and passkey options reveal below it step by step.",
+      tiers: [
+        { label: "Hifi", file: "v1-progressive-hifi.html" },
+        { label: "Lofi", file: "v1-progressive-lofi.html" },
+      ],
+    },
+    {
+      name: "Direction 2: Split-screen behind glass",
+      description: "Full form on the left; a pure-CSS frosted glass panel on the right suggests the product beyond.",
+      tiers: [
+        { label: "Hifi", file: "v2-split-screen-hifi.html" },
+        { label: "Lofi", file: "v2-split-screen-lofi.html" },
+      ],
+    },
+    {
+      name: "Direction 3: Passkey-first",
+      description: "Passwordless is the hero action; password is demoted to a quiet fallback link.",
+      tiers: [
+        { label: "Hifi", file: "v3-passkey-first-hifi.html" },
+        { label: "Lofi", file: "v3-passkey-first-lofi.html" },
+      ],
+    },
+  ];
+
+  const tabsEl = document.getElementById('tabs');
+  const panelsEl = document.getElementById('panels');
+
+  function parseHash() {
+    const m = location.hash.match(/^#(\d+)-(\d+)$/);
+    if (m) {
+      const dir = +m[1];
+      if (dir >= 0 && dir < ANGLES.length) {
+        const tier = Math.min(Math.max(+m[2], 0), ANGLES[dir].tiers.length - 1);
+        return { dir, tier };
+      }
+    }
+    return { dir: 0, tier: 0 };
+  }
+  const initial = parseHash();
+
+  ANGLES.forEach((angle, ai) => {
+    const isActiveDir = ai === initial.dir;
+    const startTier = isActiveDir ? initial.tier : 0;
+
+    const tabBtn = document.createElement('button');
+    tabBtn.className = 'tab-btn' + (isActiveDir ? ' active' : '');
+    tabBtn.textContent = angle.name;
+    tabBtn.onclick = () => selectTab(ai);
+    tabsEl.appendChild(tabBtn);
+
+    const panel = document.createElement('div');
+    panel.className = 'panel' + (isActiveDir ? ' active' : '');
+    panel.id = 'panel-' + ai;
+
+    const desc = document.createElement('p');
+    desc.className = 'panel-desc';
+    desc.textContent = angle.description;
+    panel.appendChild(desc);
+
+    const tierRow = document.createElement('div');
+    tierRow.className = 'tier-row';
+    const iframe = document.createElement('iframe');
+    iframe.src = angle.tiers[startTier].file;
+
+    const openLink = document.createElement('a');
+    openLink.className = 'open-link';
+    openLink.target = '_blank';
+    openLink.textContent = 'Open in new tab ↗';
+    openLink.href = angle.tiers[startTier].file;
+
+    angle.tiers.forEach((tier, ti) => {
+      const btn = document.createElement('button');
+      btn.className = 'tier-btn' + (ti === startTier ? ' active' : '') + (tier.legacy ? ' legacy' : '');
+      btn.textContent = tier.label;
+      btn.dataset.tierIndex = ti;
+      btn.onclick = () => {
+        iframe.src = tier.file;
+        openLink.href = tier.file;
+        tierRow.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        history.replaceState(null, '', '#' + ai + '-' + ti);
+      };
+      tierRow.appendChild(btn);
+    });
+    tierRow.appendChild(openLink);
+    panel.appendChild(tierRow);
+
+    const frameWrap = document.createElement('div');
+    frameWrap.className = 'frame-wrap';
+    frameWrap.appendChild(iframe);
+    panel.appendChild(frameWrap);
+
+    panelsEl.appendChild(panel);
+  });
+
+  history.replaceState(null, '', '#' + initial.dir + '-' + initial.tier);
+
+  function selectTab(index) {
+    tabsEl.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === index));
+    panelsEl.querySelectorAll('.panel').forEach((p, i) => p.classList.toggle('active', i === index));
+    const activeTierBtn = panelsEl.querySelector('#panel-' + index + ' .tier-btn.active');
+    const tierIndex = activeTierBtn ? activeTierBtn.dataset.tierIndex : 0;
+    history.replaceState(null, '', '#' + index + '-' + tierIndex);
+  }
+</script>
+</body>
+</html>

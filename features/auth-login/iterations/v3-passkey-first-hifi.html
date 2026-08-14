@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #f9fafb;
+    --surface-alt: #f3f4f6;
+    --text: #111827;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --accent: #4f46e5;
+    --accent-hover: #4338ca;
+    --accent-contrast: #ffffff;
+    --focus-ring: #4f46e5;
+    --danger: #dc2626;
+
+    --sp-1: 0.25rem;
+    --sp-2: 0.5rem;
+    --sp-3: 0.75rem;
+    --sp-4: 1rem;
+    --sp-5: 1.5rem;
+    --sp-6: 2.5rem;
+
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-full: 9999px;
+
+    --fs-xs: 0.75rem;
+    --fs-sm: 0.875rem;
+    --fs-base: 1rem;
+    --fs-lg: 1.125rem;
+    --fs-xl: 1.5rem;
+    --fs-3xl: 2rem;
+
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--surface);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: var(--fs-base);
+    line-height: 1.5;
+  }
+
+  .page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--sp-5);
+  }
+
+  .card {
+    width: 100%;
+    max-width: 400px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    padding: var(--sp-6) var(--sp-5);
+  }
+
+  .brand-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
+    margin: 0 auto var(--sp-4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .brand-mark svg {
+    width: 18px;
+    height: 18px;
+    stroke: var(--accent-contrast);
+  }
+
+  h1 {
+    font-size: var(--fs-xl);
+    font-weight: 600;
+    text-align: center;
+    margin: 0 0 var(--sp-1);
+    letter-spacing: -0.01em;
+  }
+
+  .subtitle {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    text-align: center;
+    margin: 0 0 var(--sp-5);
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+
+  label {
+    display: block;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: var(--sp-2);
+  }
+
+  .field input[type="email"],
+  .field input[type="password"] {
+    width: 100%;
+    font-size: var(--fs-base);
+    font-family: inherit;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: var(--sp-3) var(--sp-3);
+  }
+
+  .field input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .field input:focus {
+    outline: none;
+    border-color: var(--focus-ring);
+    box-shadow: 0 0 0 3px rgb(79 70 229 / 0.15);
+  }
+
+  /* Hero passkey CTA */
+  .passkey-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-2);
+    width: 100%;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    border: none;
+    border-radius: var(--radius-md);
+    padding: var(--sp-4) var(--sp-4);
+    font-size: var(--fs-base);
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: var(--shadow-md), 0 0 0 4px rgb(79 70 229 / 0.08);
+    transition: background 0.15s ease, transform 0.05s ease;
+  }
+
+  .passkey-btn:hover { background: var(--accent-hover); }
+  .passkey-btn:active { transform: translateY(1px); }
+
+  .passkey-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-md), 0 0 0 3px rgb(79 70 229 / 0.35);
+  }
+
+  .passkey-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--accent-contrast);
+    flex-shrink: 0;
+  }
+
+  .passkey-caption {
+    text-align: center;
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    margin-top: calc(var(--sp-2) * -1);
+    margin-bottom: 0;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+    margin: var(--sp-2) 0;
+  }
+
+  .divider::before,
+  .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Secondary / demoted controls */
+  .secondary-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+
+  .btn-secondary {
+    width: 100%;
+    background: var(--surface-alt);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: var(--sp-3) var(--sp-3);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .btn-secondary:hover {
+    background: var(--border);
+  }
+
+  .btn-secondary:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgb(79 70 229 / 0.15);
+  }
+
+  .use-password-link {
+    display: block;
+    text-align: center;
+    background: none;
+    border: none;
+    padding: var(--sp-1) 0;
+    font-size: var(--fs-sm);
+    font-family: inherit;
+    color: var(--text-muted);
+    text-decoration: underline;
+    text-decoration-color: var(--border);
+    cursor: pointer;
+  }
+
+  .use-password-link:hover {
+    color: var(--text);
+    text-decoration-color: var(--text-muted);
+  }
+
+  /* Collapsed password panel (hidden by default in the passkey-first state) */
+  .password-panel {
+    display: none;
+    flex-direction: column;
+    gap: var(--sp-4);
+    border-top: 1px solid var(--border);
+    padding-top: var(--sp-4);
+    margin-top: var(--sp-1);
+  }
+
+  .password-panel.open {
+    display: flex;
+  }
+
+  .password-panel .submit-btn {
+    width: 100%;
+    background: var(--surface-alt);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: var(--sp-3);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  .password-panel .submit-btn:hover {
+    background: var(--border);
+  }
+
+  .row-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .forgot-link {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+
+  .forgot-link:hover {
+    color: var(--text);
+    text-decoration: underline;
+  }
+
+  .footer-links {
+    text-align: center;
+    margin-top: var(--sp-5);
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+  }
+
+  .footer-links a {
+    color: var(--text);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .footer-links a:hover {
+    text-decoration: underline;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="card">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M17.5 17.5L15 15M6 18l2.5-2.5M17.5 6.5L15 9"/>
+        </svg>
+      </div>
+
+      <h1>Sign in</h1>
+      <p class="subtitle">Welcome back. Use your fastest option below.</p>
+
+      <form autocomplete="on">
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="you@company.com" autocomplete="username" required>
+        </div>
+
+        <!-- Hero path: passkey / device biometric -->
+        <button type="button" class="passkey-btn" id="passkey-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 2.5c-3.6 0-6.5 2.9-6.5 6.5 0 1.7.3 3.3.9 4.8"/>
+            <path d="M12 2.5c3.6 0 6.5 2.9 6.5 6.5 0 3.8-1.1 7.3-3 10.3"/>
+            <path d="M12 6.2c-1.8 0-3.3 1.5-3.3 3.3 0 3.4-.9 6.6-2.6 9.4"/>
+            <path d="M12 6.2c1.8 0 3.3 1.5 3.3 3.3 0 1.4-.1 2.8-.4 4.1"/>
+            <path d="M12 9.9c0 3.9-1.2 7.6-3.4 10.7"/>
+            <path d="M15.4 15.8c-.4 1.6-1 3.1-1.9 4.5"/>
+          </svg>
+          Continue with passkey
+        </button>
+        <p class="passkey-caption">Uses your device's Face ID, fingerprint, or screen lock</p>
+
+        <button type="button" class="use-password-link" id="toggle-password" aria-expanded="false" aria-controls="password-panel">
+          Use a password instead
+        </button>
+
+        <div class="secondary-stack">
+          <button type="button" class="btn-secondary">Continue with SSO</button>
+        </div>
+
+        <div class="password-panel" id="password-panel">
+          <div class="field">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password">
+          </div>
+          <div class="row-between">
+            <span></span>
+            <a href="#" class="forgot-link">Forgot password?</a>
+          </div>
+          <button type="submit" class="submit-btn">Sign in</button>
+        </div>
+      </form>
+
+      <p class="footer-links">
+        Don't have an account? <a href="#">Sign up</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Static mockup only: toggles the demoted password panel for review purposes.
+    document.getElementById('toggle-password').addEventListener('click', function () {
+      var panel = document.getElementById('password-panel');
+      var expanded = panel.classList.toggle('open');
+      this.setAttribute('aria-expanded', String(expanded));
+      this.textContent = expanded ? 'Hide password field' : 'Use a password instead';
+    });
+  </script>
+</body>
+</html>

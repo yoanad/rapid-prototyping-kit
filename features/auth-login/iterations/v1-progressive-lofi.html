@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in — v1 progressive (lofi)</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #f3f4f6;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #111827;
+  }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 20px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 380px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 40px 32px;
+  }
+
+  .brand-box {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #111827;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    margin: 0 auto 24px;
+    color: #111827;
+  }
+
+  h1 {
+    font-size: 22px;
+    line-height: 1.3;
+    font-weight: 600;
+    margin: 0 0 6px;
+    text-align: center;
+    color: #111827;
+  }
+
+  .subtext {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #6b7280;
+    text-align: center;
+    margin: 0 0 28px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* one field per row, each step reveals as a block below the previous */
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .step + .step {
+    margin-top: 16px;
+  }
+
+  .field-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #374151;
+    letter-spacing: 0.02em;
+  }
+
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    height: 44px;
+    padding: 0 14px;
+    font-size: 15px;
+    font-family: inherit;
+    color: #111827;
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+  }
+
+  input::placeholder {
+    color: #9ca3af;
+  }
+
+  input[type="email"]:focus,
+  input[type="password"]:focus {
+    outline: none;
+    border-color: #6b7280;
+    background: #ffffff;
+  }
+
+  /* email row locked-in state: shows value + small "Change" affordance,
+     simulating the step already completed and collapsed */
+  .locked-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 44px;
+    padding: 0 14px;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 15px;
+    color: #111827;
+  }
+
+  .locked-row button {
+    border: none;
+    background: none;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font-family: inherit;
+  }
+
+  .btn {
+    width: 100%;
+    height: 44px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  .btn-primary {
+    background: #111827;
+    color: #ffffff;
+    border: 1px solid #111827;
+  }
+
+  .btn-secondary {
+    background: #ffffff;
+    color: #111827;
+    border: 1px solid #d1d5db;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+  }
+
+  .divider .line {
+    flex: 1;
+    height: 1px;
+    background: #e5e7eb;
+  }
+
+  .divider span {
+    font-size: 12px;
+    color: #9ca3af;
+  }
+
+  .glyph {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #6b7280;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #6b7280;
+    margin-right: 8px;
+    flex: none;
+  }
+
+  .btn-secondary.with-glyph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .links-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    font-size: 13px;
+  }
+
+  .links-row a {
+    color: #374151;
+    text-decoration: underline;
+  }
+
+  .signup {
+    text-align: center;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #f3f4f6;
+    font-size: 14px;
+    color: #6b7280;
+  }
+
+  .signup a {
+    color: #111827;
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  /* progressive-disclosure cue: each revealed step is marked with a
+     tiny leading indicator to show it "slid in" below the previous one */
+  .step[data-revealed="true"]::before {
+    content: "";
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: #d1d5db;
+    margin-bottom: 4px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="brand-box">Co</div>
+    <h1>Sign in</h1>
+    <p class="subtext">Enter your email to continue</p>
+
+    <form>
+      <!-- Step 1: email — shown already "completed" to simulate the
+           post-entry state, collapsed into a locked summary row -->
+      <div class="step">
+        <span class="field-label">Email</span>
+        <div class="locked-row">
+          <span>you@company.com</span>
+          <button type="button">Change</button>
+        </div>
+      </div>
+
+      <!-- Step 2: revealed after email — password -->
+      <div class="step" data-revealed="true">
+        <span class="field-label">Password</span>
+        <input type="password" placeholder="Password" value="••••••••••">
+      </div>
+
+      <div class="step" data-revealed="true">
+        <button type="button" class="btn btn-primary">Continue</button>
+      </div>
+
+      <!-- Step 3: revealed below — alternate sign-in paths -->
+      <div class="step" data-revealed="true">
+        <div class="divider">
+          <span class="line"></span>
+          <span>or</span>
+          <span class="line"></span>
+        </div>
+      </div>
+
+      <div class="step" data-revealed="true">
+        <button type="button" class="btn btn-secondary with-glyph">
+          <span class="glyph">SSO</span>
+          Continue with SSO
+        </button>
+      </div>
+
+      <div class="step" data-revealed="true">
+        <button type="button" class="btn btn-secondary with-glyph">
+          <span class="glyph">⚿</span>
+          Use a passkey instead
+        </button>
+      </div>
+
+      <!-- Step 4: revealed last — utility links -->
+      <div class="step" data-revealed="true">
+        <div class="links-row">
+          <a href="#">Forgot password?</a>
+        </div>
+      </div>
+    </form>
+
+    <p class="signup">No account? <a href="#">Sign up</a></p>
+  </div>
+
+</body>
+</html>
