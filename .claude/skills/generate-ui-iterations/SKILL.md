@@ -132,3 +132,16 @@ untiered file per angle (`v{n}-<angle-slug>.html`, no suffix):
   `index.html` to include everything — don't overwrite prior variants.
 - If a `dataviz` skill is available in this environment, use it for any
   chart/dashboard brief before writing chart markup.
+- CSS that breaks `scripts/screenshot.js`'s full-page capture, avoid it:
+  - No load-in animations that leave anything mid-transition (opacity,
+    transform, position) at first paint — the screenshot is taken
+    immediately on load.
+  - No `transform: scale()` on a CSS grid child to make it look bigger — it
+    doesn't affect grid track sizing and causes overlap with neighbors. Give
+    it real extra grid space instead.
+  - No `position: sticky`/`fixed` bottom-anchored bars — Playwright's
+    fullPage screenshot freezes them at the Y-offset of the *original*
+    viewport height instead of the true document bottom, so they render
+    floating mid-page in the capture. Use normal static/relative flow for
+    any bottom action bar. (Top-anchored sticky, e.g. a sticky table header
+    or sidebar, renders fine.)

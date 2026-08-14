@@ -34,13 +34,16 @@ That's the whole discovery mechanism — no registry file, no config.
 ## 3. Infer the prefix — never assume one
 
 ```bash
-grep -ohE -- '--[a-zA-Z0-9-]+' tokens/<file>.css | sed 's/-[^-]*$//' \
+grep -ohE -- '--[a-zA-Z0-9_-]+' tokens/<file>.css | sed -E 's/[-_][^-_]*$//' \
   | sort | uniq -c | sort -rn | head -20
 ```
 
 The most frequent stems are the prefix + category. State what you inferred in
 one line before quoting values (e.g. "reading tokens/acme.css, prefix
-`--acme-color-`"). If the file has no custom properties at all, treat it as
+`--acme-color-`", or `--acme_c_` for an underscore-delimited file). If the
+command's output isn't a usable prefix (too few properties for a stem to
+dominate), read the file directly and infer by eye instead of trusting the
+count blindly. If the file has no custom properties at all, treat it as
 unusable and fall through to rule 6.
 
 ## 4. Map categories by meaning, not by exact key
