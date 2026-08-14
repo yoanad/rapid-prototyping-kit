@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — Value Narrative</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #f9fafb;
+    --surface-alt: #f3f4f6;
+    --text: #111827;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --accent: #4f46e5;
+    --accent-hover: #4338ca;
+    --accent-contrast: #ffffff;
+    --success: #16a34a;
+    --sp-1: 0.25rem;
+    --sp-2: 0.5rem;
+    --sp-3: 0.75rem;
+    --sp-4: 1rem;
+    --sp-5: 1.5rem;
+    --sp-6: 2.5rem;
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-full: 9999px;
+    --fs-xs: 0.75rem;
+    --fs-sm: 0.875rem;
+    --fs-base: 1rem;
+    --fs-lg: 1.125rem;
+    --fs-xl: 1.5rem;
+    --fs-3xl: 2rem;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: var(--fs-base);
+    line-height: 1.5;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sp-4) var(--sp-6);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-weight: 700;
+    font-size: var(--fs-lg);
+  }
+
+  .nav-logo svg { width: 24px; height: 24px; }
+
+  .nav-links {
+    display: flex;
+    gap: var(--sp-5);
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+  }
+
+  .nav-cta {
+    padding: var(--sp-2) var(--sp-4);
+    background: var(--accent);
+    color: var(--accent-contrast);
+    border-radius: var(--radius-md);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+  }
+
+  /* ---- Hero ---- */
+  .hero {
+    text-align: center;
+    padding: var(--sp-6) var(--sp-6) var(--sp-5);
+    max-width: 46rem;
+    margin: 0 auto;
+  }
+
+  .hero-eyebrow {
+    display: inline-block;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: var(--sp-3);
+  }
+
+  .hero h1 {
+    font-size: var(--fs-3xl);
+    line-height: 1.15;
+    margin: 0 0 var(--sp-3);
+    letter-spacing: -0.01em;
+  }
+
+  .hero p {
+    color: var(--text-muted);
+    font-size: var(--fs-lg);
+    margin: 0;
+  }
+
+  /* ---- Bands ---- */
+  .band {
+    padding: var(--sp-6) var(--sp-6);
+    border-top: 1px solid var(--border);
+  }
+
+  .band-alt { background: var(--surface); }
+
+  .band-inner {
+    max-width: 64rem;
+    margin: 0 auto;
+  }
+
+  .band-head {
+    max-width: 40rem;
+    margin: 0 0 var(--sp-6);
+  }
+
+  .band-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: var(--fs-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: var(--sp-3);
+  }
+
+  .band-kicker .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  .band-head h2 {
+    font-size: var(--fs-3xl);
+    margin: 0 0 var(--sp-2);
+    letter-spacing: -0.01em;
+  }
+
+  .band-head p {
+    color: var(--text-muted);
+    font-size: var(--fs-lg);
+    margin: 0;
+  }
+
+  /* ---- Band 1: baseline grid ---- */
+  .baseline-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-5);
+  }
+
+  .baseline-item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--sp-5);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .baseline-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    background: var(--surface-alt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--sp-4);
+  }
+
+  .baseline-icon svg { width: 20px; height: 20px; stroke: var(--accent); fill: none; }
+
+  .baseline-item h3 {
+    font-size: var(--fs-lg);
+    margin: 0 0 var(--sp-2);
+  }
+
+  .baseline-item p {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    margin: 0;
+  }
+
+  /* ---- Band 2: scaling axes ---- */
+  .axis-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-6);
+  }
+
+  .axis-row {
+    display: grid;
+    grid-template-columns: 15rem 1fr;
+    gap: var(--sp-6);
+    align-items: center;
+    padding-bottom: var(--sp-5);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .axis-row:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .axis-copy h3 {
+    font-size: var(--fs-lg);
+    margin: 0 0 var(--sp-2);
+  }
+
+  .axis-copy p {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    margin: 0;
+  }
+
+  .axis-viz {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-5);
+  }
+
+  .axis-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-2);
+    flex: 1;
+  }
+
+  .axis-bar-track {
+    width: 100%;
+    height: 10px;
+    background: var(--surface-alt);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+  }
+
+  .axis-bar-fill {
+    height: 100%;
+    border-radius: var(--radius-full);
+    background: var(--accent);
+  }
+
+  .axis-step-label {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .axis-step-value {
+    font-size: var(--fs-sm);
+    font-weight: 700;
+  }
+
+  .axis-dots {
+    display: flex;
+    gap: var(--sp-1);
+    align-items: flex-end;
+  }
+
+  .axis-dot {
+    border-radius: var(--radius-sm);
+    background: var(--accent);
+  }
+
+  /* ---- Band 3: pricing cards ---- */
+  .toggle-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-4);
+    margin-bottom: var(--sp-6);
+  }
+
+  .toggle-label {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .toggle-label.active { color: var(--text); }
+
+  .toggle-switch {
+    width: 44px;
+    height: 24px;
+    border-radius: var(--radius-full);
+    background: var(--accent);
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .toggle-knob {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: var(--radius-full);
+    background: var(--accent-contrast);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .toggle-badge {
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: var(--success);
+    background: #ecfdf3;
+    padding: var(--sp-1) var(--sp-2);
+    border-radius: var(--radius-full);
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-5);
+    max-width: 64rem;
+    margin: 0 auto;
+    align-items: start;
+  }
+
+  .card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--sp-5);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .card.featured {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-md);
+    position: relative;
+  }
+
+  .card-badge {
+    position: absolute;
+    top: -12px;
+    left: var(--sp-5);
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    padding: var(--sp-1) var(--sp-3);
+    border-radius: var(--radius-full);
+  }
+
+  .card-tier {
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    margin: 0 0 var(--sp-3);
+  }
+
+  .card.featured .card-tier { color: var(--accent); }
+
+  .card-price {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-1);
+    margin-bottom: var(--sp-1);
+  }
+
+  .card-price .amount {
+    font-size: var(--fs-3xl);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .card-price .period {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+  }
+
+  .card-annual-note {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    margin: 0 0 var(--sp-4);
+    min-height: 1em;
+  }
+
+  .card-cta {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: var(--sp-3) var(--sp-4);
+    border-radius: var(--radius-md);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    margin-bottom: var(--sp-5);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+  }
+
+  .card.featured .card-cta {
+    background: var(--accent);
+    color: var(--accent-contrast);
+    border-color: var(--accent);
+  }
+
+  .card-features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+
+  .card-features li {
+    display: flex;
+    gap: var(--sp-2);
+    font-size: var(--fs-sm);
+    color: var(--text);
+  }
+
+  .card-features svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--success);
+    fill: none;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .footer {
+    text-align: center;
+    padding: var(--sp-6);
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-logo">
+      <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#4f46e5"/><path d="M7 12l3.5 3.5L17 9" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Fluxboard
+    </div>
+    <div class="nav-links">
+      <span>Product</span>
+      <span>Customers</span>
+      <span>Docs</span>
+      <span>Pricing</span>
+    </div>
+    <div class="nav-cta">Start free trial</div>
+  </nav>
+
+  <header class="hero">
+    <span class="hero-eyebrow">Pricing</span>
+    <h1>One system, built to grow the way your team does</h1>
+    <p>Every plan starts with the same solid foundation. The difference is how far it stretches with you.</p>
+  </header>
+
+  <!-- Band 1: baseline -->
+  <section class="band">
+    <div class="band-inner">
+      <div class="band-head">
+        <span class="band-kicker"><span class="dot"></span>Everyone gets this</span>
+        <h2>What you get with any plan</h2>
+        <p>No feature-gated basics. Every tier ships with the full core product from day one.</p>
+      </div>
+      <div class="baseline-grid">
+        <div class="baseline-item">
+          <div class="baseline-icon">
+            <svg viewBox="0 0 24 24"><path d="M4 12h16M4 6h16M4 18h16" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Unlimited workflows</h3>
+          <p>Build as many automations and boards as your team needs, no caps on core usage.</p>
+        </div>
+        <div class="baseline-item">
+          <div class="baseline-icon">
+            <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3" stroke-width="2"/><path d="M4 9h16" stroke-width="2"/></svg>
+          </div>
+          <h3>SOC 2 Type II security</h3>
+          <p>Encrypted at rest and in transit, with audit logs available to every customer.</p>
+        </div>
+        <div class="baseline-item">
+          <div class="baseline-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 3v6l4 2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke-width="2"/></svg>
+          </div>
+          <h3>99.9% uptime SLA</h3>
+          <p>Same infrastructure, same reliability guarantees, regardless of plan.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Band 2: scaling axes -->
+  <section class="band band-alt">
+    <div class="band-inner">
+      <div class="band-head">
+        <span class="band-kicker"><span class="dot"></span>Grows with your team</span>
+        <h2>Where it scales with you</h2>
+        <p>As your team and usage grow, four things move with you. Here's how each one steps up.</p>
+      </div>
+
+      <div class="axis-list">
+        <div class="axis-row">
+          <div class="axis-copy">
+            <h3>Seats included</h3>
+            <p>Add teammates without hitting a wall as headcount grows.</p>
+          </div>
+          <div class="axis-viz">
+            <div class="axis-step">
+              <div class="axis-bar-track"><div class="axis-bar-fill" style="width:20%; background:#c7d2fe;"></div></div>
+              <span class="axis-step-value">3 seats</span>
+              <span class="axis-step-label">Starter</span>
+            </div>
+            <div class="axis-step">
+              <div class="axis-bar-track"><div class="axis-bar-fill" style="width:55%; background:#818cf8;"></div></div>
+              <span class="axis-step-value">10 seats</span>
+              <span class="axis-step-label">Growth</span>
+            </div>
+            <div class="axis-step">
+              <div class="axis-bar-track"><div class="axis-bar-fill" style="width:100%; background:#4f46e5;"></div></div>
+              <span class="axis-step-value">Unlimited</span>
+              <span class="axis-step-label">Scale</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="axis-row">
+          <div class="axis-copy">
+            <h3>Active projects</h3>
+            <p>More parallel initiatives without archiving old work to make room.</p>
+          </div>
+          <div class="axis-viz">
+            <div class="axis-step">
+              <div class="axis-bar-track"><div class="axis-bar-fill" style="width:15%; background:#c7d2fe;"></div></div>
+              <span class="axis-step-value">5 projects</span>
+              <span class="axis-step-label">Starter</span>
+            </div>
+            <div class="axis-step">
+              <div class="axis-bar-track"><div class="axis-bar-fill" style="width:50%; background:#818cf8;"></div></div>
+              <span class="axis-step-value">25 projects</span>
+              <span class="axis-step-label">Growth</span>
+            </div>
+            <div class="axis-step">
+              <div class="axis-bar-track"><div class="axis-bar-fill" style="width:100%; background:#4f46e5;"></div></div>
+              <span class="axis-step-value">Unlimited</span>
+              <span class="axis-step-label">Scale</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="axis-row">
+          <div class="axis-copy">
+            <h3>Support level</h3>
+            <p>When things break, response time and access to a real human both improve.</p>
+          </div>
+          <div class="axis-viz">
+            <div class="axis-step">
+              <div class="axis-dots">
+                <div class="axis-dot" style="width:10px; height:10px; background:#c7d2fe;"></div>
+                <div class="axis-dot" style="width:10px; height:10px; background:var(--surface-alt);"></div>
+                <div class="axis-dot" style="width:10px; height:10px; background:var(--surface-alt);"></div>
+              </div>
+              <span class="axis-step-value">Email</span>
+              <span class="axis-step-label">Starter</span>
+            </div>
+            <div class="axis-step">
+              <div class="axis-dots">
+                <div class="axis-dot" style="width:10px; height:10px; background:#818cf8;"></div>
+                <div class="axis-dot" style="width:10px; height:10px; background:#818cf8;"></div>
+                <div class="axis-dot" style="width:10px; height:10px; background:var(--surface-alt);"></div>
+              </div>
+              <span class="axis-step-value">Priority email</span>
+              <span class="axis-step-label">Growth</span>
+            </div>
+            <div class="axis-step">
+              <div class="axis-dots">
+                <div class="axis-dot" style="width:10px; height:10px; background:#4f46e5;"></div>
+                <div class="axis-dot" style="width:10px; height:10px; background:#4f46e5;"></div>
+                <div class="axis-dot" style="width:10px; height:10px; background:#4f46e5;"></div>
+              </div>
+              <span class="axis-step-value">Dedicated Slack</span>
+              <span class="axis-step-label">Scale</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="axis-row">
+          <div class="axis-copy">
+            <h3>API access</h3>
+            <p>Move from viewing data to fully automating against it.</p>
+          </div>
+          <div class="axis-viz">
+            <div class="axis-step">
+              <div class="axis-bar-track"><div class="axis-bar-fill" style="width:0%; background:#c7d2fe;"></div></div>
+              <span class="axis-step-value">None</span>
+              <span class="axis-step-label">Starter</span>
+            </div>
+            <div class="axis-step">
+              <div class="axis-bar-track"><div class="axis-bar-fill" style="width:50%; background:#818cf8;"></div></div>
+              <span class="axis-step-value">Read-only</span>
+              <span class="axis-step-label">Growth</span>
+            </div>
+            <div class="axis-step">
+              <div class="axis-bar-track"><div class="axis-bar-fill" style="width:100%; background:#4f46e5;"></div></div>
+              <span class="axis-step-value">Full access</span>
+              <span class="axis-step-label">Scale</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Band 3: pricing cards -->
+  <section class="band">
+    <div class="band-inner">
+      <div class="band-head" style="margin: 0 auto var(--sp-6); text-align: center;">
+        <h2>Pick the plan that matches where you are</h2>
+        <p style="margin: 0 auto;">Same product underneath. Switch or cancel anytime.</p>
+      </div>
+
+      <div class="toggle-wrap">
+        <span class="toggle-label">Monthly</span>
+        <div class="toggle-switch"><div class="toggle-knob"></div></div>
+        <span class="toggle-label active">Annual</span>
+        <span class="toggle-badge">2 months free</span>
+      </div>
+
+      <div class="cards-grid">
+        <div class="card">
+          <p class="card-tier">Starter</p>
+          <div class="card-price"><span class="amount">$19</span><span class="period">/mo</span></div>
+          <p class="card-annual-note">Billed annually</p>
+          <a class="card-cta" href="#">Start free trial</a>
+          <ul class="card-features">
+            <li><svg viewBox="0 0 24 24"><path d="M4 12l5 5 11-11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>3 seats</li>
+            <li><svg viewBox="0 0 24 24"><path d="M4 12l5 5 11-11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>5 projects</li>
+            <li><svg viewBox="0 0 24 24"><path d="M4 12l5 5 11-11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Email support</li>
+            <li><svg viewBox="0 0 24 24"><path d="M4 12l5 5 11-11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>No API access</li>
+          </ul>
+        </div>
+
+        <div class="card featured">
+          <span class="card-badge">Most popular</span>
+          <p class="card-tier">Growth</p>
+          <div class="card-price"><span class="amount">$49</span><span class="period">/mo</span></div>
+          <p class="card-annual-note">Billed annually</p>
+          <a class="card-cta" href="#">Start free trial</a>
+          <ul class="card-features">
+            <li><svg viewBox="0 0 24 24"><path d="M4 12l5 5 11-11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>10 seats</li>
+            <li><svg viewBox="0 0 24 24"><path d="M4 12l5 5 11-11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>25 projects</li>
+            <li><svg viewBox="0 0 24 24"><path d="M4 12l5 5 11-11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Priority email support</li>
+            <li><svg viewBox="0 0 24 24"><path d="M4 12l5 5 11-11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Read-only API access</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <p class="card-tier">Scale</p>
+          <div class="card-price"><span class="amount">$149</span><span class="period">/mo</span></div>
+          <p class="card-annual-note">Billed annually</p>
+          <a class="card-cta" href="#">Talk to sales</a>
+          <ul class="card-features">
+            <li><svg viewBox="0 0 24 24"><path d="M4 12l5 5 11-11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited seats</li>
+            <li><svg viewBox="0 0 24 24"><path d="M4 12l5 5 11-11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited projects</li>
+            <li><svg viewBox="0 0 24 24"><path d="M4 12l5 5 11-11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Dedicated Slack support</li>
+            <li><svg viewBox="0 0 24 24"><path d="M4 12l5 5 11-11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Full API access</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">© 2026 Fluxboard, Inc. — all plans include a 14-day free trial.</footer>
+
+</body>
+</html>

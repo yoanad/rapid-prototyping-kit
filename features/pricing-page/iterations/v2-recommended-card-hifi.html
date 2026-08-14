@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — Growth Recommended</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #f9fafb;
+    --surface-alt: #f3f4f6;
+    --text: #111827;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --accent: #4f46e5;
+    --accent-hover: #4338ca;
+    --accent-contrast: #ffffff;
+    --success: #16a34a;
+
+    --sp-1: 0.25rem;
+    --sp-2: 0.5rem;
+    --sp-3: 0.75rem;
+    --sp-4: 1rem;
+    --sp-5: 1.5rem;
+    --sp-6: 2.5rem;
+
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-full: 9999px;
+
+    --fs-xs: 0.75rem;
+    --fs-sm: 0.875rem;
+    --fs-base: 1rem;
+    --fs-lg: 1.125rem;
+    --fs-xl: 1.5rem;
+    --fs-3xl: 2rem;
+
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-hero: 0 20px 40px -8px rgb(79 70 229 / 0.25);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: var(--fs-base);
+    line-height: 1.5;
+  }
+
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--sp-6) var(--sp-5) 6rem;
+  }
+
+  header.hero {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto var(--sp-6);
+  }
+
+  header.hero .eyebrow {
+    display: inline-block;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: var(--sp-2);
+  }
+
+  header.hero h1 {
+    font-size: var(--fs-3xl);
+    font-weight: 800;
+    margin: 0 0 var(--sp-3);
+    letter-spacing: -0.02em;
+  }
+
+  header.hero p {
+    font-size: var(--fs-lg);
+    color: var(--text-muted);
+    margin: 0 0 var(--sp-5);
+  }
+
+  /* Toggle */
+  .toggle-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-3);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    padding: var(--sp-1);
+    font-size: var(--fs-sm);
+  }
+
+  .toggle-wrap .toggle-option {
+    padding: var(--sp-2) var(--sp-4);
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: default;
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+
+  .toggle-wrap .toggle-option.active {
+    background: var(--bg);
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .toggle-wrap .save-badge {
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: var(--success);
+    background: #dcfce7;
+    padding: 0.1rem var(--sp-2);
+    border-radius: var(--radius-full);
+  }
+
+  .switch {
+    width: 40px;
+    height: 22px;
+    border-radius: var(--radius-full);
+    background: var(--accent);
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .switch .knob {
+    position: absolute;
+    top: 2px;
+    left: 20px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent-contrast);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Cards grid */
+  .plans {
+    display: grid;
+    grid-template-columns: 0.9fr 1.15fr 0.9fr;
+    align-items: center;
+    gap: var(--sp-5);
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--sp-5);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .card.minor {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .card.minor .plan-name {
+    font-size: var(--fs-lg);
+    font-weight: 700;
+    margin: 0 0 var(--sp-1);
+  }
+
+  .card.minor .plan-tagline {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    margin: 0 0 var(--sp-4);
+  }
+
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-1);
+    margin-bottom: var(--sp-4);
+  }
+
+  .card.minor .price-row .amount {
+    font-size: var(--fs-3xl);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .price-row .period {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+  }
+
+  .price-row .annual-note {
+    display: none;
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    margin-top: var(--sp-1);
+  }
+
+  ul.features {
+    list-style: none;
+    margin: 0 0 var(--sp-5);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    flex: 1;
+  }
+
+  ul.features li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-2);
+    font-size: var(--fs-sm);
+    color: var(--text);
+  }
+
+  ul.features li svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .card.minor ul.features li svg { color: var(--text-muted); }
+  .card.hero ul.features li svg { color: var(--accent); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: default;
+  }
+
+  .btn-secondary {
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--border);
+    padding: var(--sp-3) var(--sp-4);
+    font-size: var(--fs-sm);
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--accent-contrast);
+    padding: var(--sp-4) var(--sp-4);
+    font-size: var(--fs-lg);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Hero / Growth card */
+  .card.hero {
+    padding: var(--sp-6) var(--sp-5);
+    border: 2px solid var(--accent);
+    border-top: none;
+    box-shadow: var(--shadow-hero);
+    z-index: 2;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card.hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #6366f1, var(--accent), #818cf8);
+  }
+
+  .badge {
+    position: absolute;
+    top: calc(-1 * var(--sp-3));
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: var(--sp-2) var(--sp-4);
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-md);
+    white-space: nowrap;
+  }
+
+  .card.hero .plan-name {
+    font-size: var(--fs-xl);
+    font-weight: 800;
+    margin: var(--sp-2) 0 var(--sp-1);
+    text-align: center;
+  }
+
+  .card.hero .plan-tagline {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    margin: 0 0 var(--sp-4);
+    text-align: center;
+  }
+
+  .card.hero .price-row {
+    justify-content: center;
+    margin-bottom: var(--sp-1);
+  }
+
+  .card.hero .price-row .amount {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+  }
+
+  .card.hero .price-row .annual-note {
+    display: block;
+    text-align: center;
+    width: 100%;
+  }
+
+  .card.hero .annual-note-wrap {
+    text-align: center;
+    margin-bottom: var(--sp-4);
+  }
+
+  .card.hero .annual-note-wrap .annual-note {
+    display: block;
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+  }
+
+  .card.hero ul.features {
+    gap: var(--sp-3);
+  }
+
+  .card.hero ul.features li {
+    font-size: var(--fs-base);
+    font-weight: 500;
+  }
+
+  .card.minor .btn { margin-top: auto; }
+  .card.hero .btn { margin-top: var(--sp-2); }
+
+  footer.fineprint {
+    text-align: center;
+    margin-top: var(--sp-6);
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+  }
+
+  @media (max-width: 900px) {
+    .plans { grid-template-columns: 1fr; }
+    .card.hero { margin: var(--sp-5) 0; }
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <span class="eyebrow">Pricing</span>
+      <h1>Plans that scale with your team</h1>
+      <p>Simple, transparent pricing. No hidden fees, cancel anytime.</p>
+
+      <div class="toggle-wrap" aria-label="Billing period toggle">
+        <span class="toggle-option">Monthly</span>
+        <span class="switch"><span class="knob"></span></span>
+        <span class="toggle-option active">Annual <span class="save-badge">2 months free</span></span>
+      </div>
+    </header>
+
+    <div class="plans">
+      <!-- Starter -->
+      <div class="card minor">
+        <div class="plan-name">Starter</div>
+        <div class="plan-tagline">For individuals getting started</div>
+        <div class="price-row">
+          <span class="amount">$19</span>
+          <span class="period">/mo</span>
+        </div>
+        <ul class="features">
+          <li>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 10.5L8 14.5L16 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            3 seats included
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 10.5L8 14.5L16 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            5 projects
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 10.5L8 14.5L16 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Email support
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 10.5L8 14.5L16 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            No API access
+          </li>
+        </ul>
+        <a class="btn btn-secondary" href="#">Start free trial</a>
+      </div>
+
+      <!-- Growth (hero) -->
+      <div class="card hero">
+        <span class="badge">Most popular</span>
+        <div class="plan-name">Growth</div>
+        <div class="plan-tagline">For teams that need more room to move</div>
+        <div class="price-row">
+          <span class="amount">$49</span>
+          <span class="period">/mo</span>
+        </div>
+        <div class="annual-note-wrap">
+          <span class="annual-note">Billed annually · 2 months free</span>
+        </div>
+        <ul class="features">
+          <li>
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10.5L8 14.5L16 5.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            10 seats included
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10.5L8 14.5L16 5.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Unlimited projects
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10.5L8 14.5L16 5.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Priority email support
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10.5L8 14.5L16 5.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Read-only API access
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10.5L8 14.5L16 5.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Advanced analytics &amp; reporting
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10.5L8 14.5L16 5.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Team roles &amp; permissions
+          </li>
+        </ul>
+        <a class="btn btn-primary" href="#">Start free trial</a>
+      </div>
+
+      <!-- Scale -->
+      <div class="card minor">
+        <div class="plan-name">Scale</div>
+        <div class="plan-tagline">For organizations with advanced needs</div>
+        <div class="price-row">
+          <span class="amount">$149</span>
+          <span class="period">/mo</span>
+        </div>
+        <ul class="features">
+          <li>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 10.5L8 14.5L16 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Unlimited seats
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 10.5L8 14.5L16 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Unlimited projects
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 10.5L8 14.5L16 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Dedicated Slack support
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 10.5L8 14.5L16 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Full API access
+          </li>
+        </ul>
+        <a class="btn btn-secondary" href="#">Talk to sales</a>
+      </div>
+    </div>
+
+    <footer class="fineprint">
+      Prices in USD, billed annually. Switch to monthly billing anytime from your account.
+    </footer>
+  </div>
+</body>
+</html>

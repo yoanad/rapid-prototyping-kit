@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — Comparison Table</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #f9fafb;
+    --surface-alt: #f3f4f6;
+    --text: #111827;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --accent: #4f46e5;
+    --accent-hover: #4338ca;
+    --accent-contrast: #ffffff;
+    --success: #16a34a;
+    --danger: #dc2626;
+
+    --sp-1: 0.25rem;
+    --sp-2: 0.5rem;
+    --sp-3: 0.75rem;
+    --sp-4: 1rem;
+    --sp-5: 1.5rem;
+    --sp-6: 2.5rem;
+
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-full: 9999px;
+
+    --fs-xs: 0.75rem;
+    --fs-sm: 0.875rem;
+    --fs-base: 1rem;
+    --fs-lg: 1.125rem;
+    --fs-xl: 1.5rem;
+    --fs-3xl: 2rem;
+
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: var(--fs-base);
+    line-height: 1.5;
+  }
+
+  .page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: var(--sp-6) var(--sp-5) var(--sp-6);
+  }
+
+  /* ---------- Intro ---------- */
+  .intro {
+    text-align: center;
+    margin-bottom: var(--sp-5);
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: var(--sp-2);
+  }
+
+  h1 {
+    font-size: var(--fs-3xl);
+    font-weight: 700;
+    margin: 0 0 var(--sp-2);
+    letter-spacing: -0.01em;
+  }
+
+  .intro p {
+    color: var(--text-muted);
+    font-size: var(--fs-lg);
+    margin: 0 0 var(--sp-5);
+  }
+
+  /* ---------- Billing toggle ---------- */
+  .toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    padding: var(--sp-1);
+  }
+
+  .toggle button {
+    font-family: inherit;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    padding: var(--sp-2) var(--sp-4);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+  }
+
+  .toggle button.active {
+    background: var(--bg);
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .toggle .save-badge {
+    background: rgb(79 70 229 / 0.12);
+    color: var(--accent);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    padding: 0.15rem var(--sp-2);
+    border-radius: var(--radius-full);
+    margin-left: var(--sp-1);
+  }
+
+  /* ---------- Table ---------- */
+  .table-wrap {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--bg);
+    box-shadow: var(--shadow-md);
+  }
+
+  .grid-row {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    position: relative;
+  }
+
+  /* full-height Growth highlight band */
+  .table-wrap {
+    position: relative;
+  }
+
+  .growth-band {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(1.4fr);
+    background: rgb(79 70 229 / 0.06);
+    pointer-events: none;
+  }
+
+  /* precise band placement via grid overlay */
+  .band-overlay {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .band-overlay .band-cell {
+    grid-column: 3;
+    background: rgb(79 70 229 / 0.055);
+    border-left: 1px solid rgb(79 70 229 / 0.12);
+    border-right: 1px solid rgb(79 70 229 / 0.12);
+  }
+
+  .table-body {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ---------- Header row (sticky) ---------- */
+  .head-row {
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    box-shadow: var(--shadow-md);
+    z-index: 2;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .head-row .label-cell {
+    display: flex;
+    align-items: flex-end;
+    padding: var(--sp-5) var(--sp-4) var(--sp-4);
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+  }
+
+  .tier-head {
+    padding: var(--sp-5) var(--sp-4) var(--sp-4);
+    text-align: center;
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+
+  .tier-badge {
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--accent-contrast);
+    background: var(--accent);
+    padding: 0.2rem var(--sp-3);
+    border-radius: var(--radius-full);
+    margin-bottom: var(--sp-1);
+  }
+
+  .tier-badge.spacer {
+    visibility: hidden;
+  }
+
+  .tier-name {
+    font-size: var(--fs-lg);
+    font-weight: 700;
+  }
+
+  .tier-price {
+    display: flex;
+    align-items: baseline;
+    gap: 0.2rem;
+    margin-top: var(--sp-1);
+  }
+
+  .tier-price .amount {
+    font-size: var(--fs-3xl);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .tier-price .period {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .tier-note {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    min-height: 1em;
+  }
+
+  .cta {
+    width: 100%;
+    margin-top: var(--sp-2);
+    padding: var(--sp-3) var(--sp-4);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .cta.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-contrast);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .cta.primary:hover { background: var(--accent-hover); }
+
+  /* ---------- Section label rows ---------- */
+  .section-row .label-cell {
+    grid-column: 1 / -1;
+    background: var(--surface-alt);
+    padding: var(--sp-2) var(--sp-4);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+  }
+
+  .section-row {
+    grid-template-columns: 1fr;
+  }
+
+  /* ---------- Feature rows ---------- */
+  .feature-row {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .feature-row:last-child {
+    border-bottom: none;
+  }
+
+  .feature-row .label-cell {
+    padding: var(--sp-3) var(--sp-4);
+    font-size: var(--fs-sm);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+  }
+
+  .feature-cell {
+    padding: var(--sp-3) var(--sp-4);
+    text-align: center;
+    border-left: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--fs-sm);
+    color: var(--text);
+  }
+
+  .feature-row:nth-child(odd) {
+    background: var(--surface);
+  }
+
+  .feature-row:nth-child(odd) .feature-cell:nth-child(3) {
+    background: rgb(79 70 229 / 0.03);
+  }
+
+  .icon-yes {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    color: var(--success);
+  }
+
+  .icon-no {
+    width: 16px;
+    height: 16px;
+    flex: none;
+    color: var(--text-muted);
+  }
+
+  /* ---------- Footer note ---------- */
+  .fine-print {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+    margin-top: var(--sp-5);
+  }
+
+  /* ---------- Trust strip ---------- */
+  .trust-strip {
+    margin-top: var(--sp-6);
+    display: flex;
+    justify-content: center;
+    gap: var(--sp-6);
+    flex-wrap: wrap;
+    padding-top: var(--sp-5);
+    border-top: 1px solid var(--border);
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+  }
+
+  .trust-item svg {
+    width: 16px;
+    height: 16px;
+    color: var(--accent);
+    flex: none;
+  }
+
+  @media (max-width: 720px) {
+    .grid-row:not(.section-row) {
+      grid-template-columns: 1fr;
+    }
+    .head-row {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+    .head-row .label-cell { display: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+
+    <div class="intro">
+      <span class="eyebrow">Pricing</span>
+      <h1>One price. Every feature you need to scale.</h1>
+      <p>Compare plans side by side — no hidden tiers, no surprises.</p>
+
+      <div class="toggle" role="group" aria-label="Billing period">
+        <button type="button" class="">Monthly</button>
+        <button type="button" class="active">Annual <span class="save-badge">2 months free</span></button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <div class="band-overlay"><div class="band-cell"></div></div>
+
+      <div class="table-body">
+        <div class="grid-row head-row">
+          <div class="label-cell">Compare plans</div>
+
+          <div class="tier-head">
+            <span class="tier-badge spacer">Most popular</span>
+            <span class="tier-name">Starter</span>
+            <div class="tier-price"><span class="amount">$19</span><span class="period">/mo</span></div>
+            <span class="tier-note">billed annually</span>
+            <button type="button" class="cta">Start free trial</button>
+          </div>
+
+          <div class="tier-head">
+            <span class="tier-badge">Most popular</span>
+            <span class="tier-name">Growth</span>
+            <div class="tier-price"><span class="amount">$49</span><span class="period">/mo</span></div>
+            <span class="tier-note">billed annually</span>
+            <button type="button" class="cta primary">Start free trial</button>
+          </div>
+
+          <div class="tier-head">
+            <span class="tier-badge spacer">Most popular</span>
+            <span class="tier-name">Scale</span>
+            <div class="tier-price"><span class="amount">$149</span><span class="period">/mo</span></div>
+            <span class="tier-note">billed annually</span>
+            <button type="button" class="cta">Talk to sales</button>
+          </div>
+        </div>
+
+        <div class="grid-row section-row">
+          <div class="label-cell">Usage</div>
+        </div>
+
+        <div class="grid-row feature-row">
+          <div class="label-cell">Seats included</div>
+          <div class="feature-cell">3 seats</div>
+          <div class="feature-cell">10 seats</div>
+          <div class="feature-cell">Unlimited</div>
+        </div>
+
+        <div class="grid-row feature-row">
+          <div class="label-cell">Active projects</div>
+          <div class="feature-cell">5 projects</div>
+          <div class="feature-cell">50 projects</div>
+          <div class="feature-cell">Unlimited</div>
+        </div>
+
+        <div class="grid-row feature-row">
+          <div class="label-cell">Data retention</div>
+          <div class="feature-cell">30 days</div>
+          <div class="feature-cell">1 year</div>
+          <div class="feature-cell">Unlimited</div>
+        </div>
+
+        <div class="grid-row section-row">
+          <div class="label-cell">Support</div>
+        </div>
+
+        <div class="grid-row feature-row">
+          <div class="label-cell">Support level</div>
+          <div class="feature-cell">Email</div>
+          <div class="feature-cell">Priority email</div>
+          <div class="feature-cell">Dedicated Slack</div>
+        </div>
+
+        <div class="grid-row feature-row">
+          <div class="label-cell">Onboarding assistance</div>
+          <div class="feature-cell">
+            <svg class="icon-no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          <div class="feature-cell">
+            <svg class="icon-yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12.5 9 17.5 20 6.5"/></svg>
+          </div>
+          <div class="feature-cell">
+            <svg class="icon-yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12.5 9 17.5 20 6.5"/></svg>
+          </div>
+        </div>
+
+        <div class="grid-row feature-row">
+          <div class="label-cell">SLA guarantee</div>
+          <div class="feature-cell">
+            <svg class="icon-no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          <div class="feature-cell">
+            <svg class="icon-no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          <div class="feature-cell">
+            <svg class="icon-yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12.5 9 17.5 20 6.5"/></svg>
+          </div>
+        </div>
+
+        <div class="grid-row section-row">
+          <div class="label-cell">Access</div>
+        </div>
+
+        <div class="grid-row feature-row">
+          <div class="label-cell">API access</div>
+          <div class="feature-cell">None</div>
+          <div class="feature-cell">Read-only</div>
+          <div class="feature-cell">Full access</div>
+        </div>
+
+        <div class="grid-row feature-row">
+          <div class="label-cell">SSO / SAML</div>
+          <div class="feature-cell">
+            <svg class="icon-no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          <div class="feature-cell">
+            <svg class="icon-no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          <div class="feature-cell">
+            <svg class="icon-yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12.5 9 17.5 20 6.5"/></svg>
+          </div>
+        </div>
+
+        <div class="grid-row feature-row">
+          <div class="label-cell">Audit logs</div>
+          <div class="feature-cell">
+            <svg class="icon-no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          <div class="feature-cell">
+            <svg class="icon-yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12.5 9 17.5 20 6.5"/></svg>
+          </div>
+          <div class="feature-cell">
+            <svg class="icon-yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12.5 9 17.5 20 6.5"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="fine-print">Prices shown reflect annual billing (2 months free). Switch to monthly billing above for month-to-month pricing.</p>
+
+    <div class="trust-strip">
+      <div class="trust-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l7 3v6c0 5-3 8-7 11-4-3-7-6-7-11V5z"/></svg>
+        SOC 2 Type II certified
+      </div>
+      <div class="trust-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
+        14-day free trial, no card required
+      </div>
+      <div class="trust-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M4 9h16"/></svg>
+        Cancel anytime
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

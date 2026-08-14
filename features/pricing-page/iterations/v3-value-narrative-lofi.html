@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pricing — Value Narrative (Lofi)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #ffffff;
+    color: #111827;
+    padding-bottom: 80px;
+  }
+
+  /* ---------- Page intro ---------- */
+  .page-head {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 56px 24px 0;
+    text-align: center;
+  }
+  .page-head h1 {
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .page-head p {
+    font-size: 16px;
+    color: #6b7280;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* ---------- Shared band scaffolding ---------- */
+  .band {
+    border-top: 1px solid #e5e7eb;
+    padding: 64px 24px;
+  }
+  .band-inner {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .band-eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6b7280;
+    margin-bottom: 10px;
+  }
+  .band h2 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    max-width: 640px;
+    margin-bottom: 32px;
+  }
+
+  /* ---------- Band 1: baseline ---------- */
+  .band-1 {
+    background: #f9fafb;
+  }
+  .baseline-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .baseline-item {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 18px 16px;
+  }
+  .baseline-icon {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #111827;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 12px;
+  }
+  .baseline-item h3 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .baseline-item p {
+    font-size: 12px;
+    color: #6b7280;
+    line-height: 1.4;
+  }
+
+  /* ---------- Band 2: scaling axes ---------- */
+  .band-2 {
+    background: #ffffff;
+  }
+  .axis-list {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+  .axis-row {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 32px;
+    align-items: center;
+  }
+  .axis-copy h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .axis-copy p {
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.5;
+  }
+
+  /* bar-style visual: three steps, increasing width/shade */
+  .axis-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .bar-track {
+    display: grid;
+    grid-template-columns: 64px 1fr 40px;
+    align-items: center;
+    gap: 12px;
+  }
+  .bar-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6b7280;
+  }
+  .bar-shell {
+    height: 10px;
+    background: #f3f4f6;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 5px;
+  }
+  .bar-fill.step-1 { width: 20%; background: #d1d5db; }
+  .bar-fill.step-2 { width: 55%; background: #9ca3af; }
+  .bar-fill.step-3 { width: 100%; background: #111827; }
+  .bar-value {
+    font-size: 12px;
+    font-weight: 700;
+    color: #111827;
+    text-align: right;
+  }
+
+  /* dot-style visual variant for support/API rows */
+  .axis-dots {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .dot-track {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    align-items: center;
+    gap: 12px;
+  }
+  .dot-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #e5e7eb;
+  }
+  .dot.filled-1 { background: #d1d5db; }
+  .dot.filled-2 { background: #9ca3af; }
+  .dot.filled-3 { background: #111827; }
+  .dot-value {
+    font-size: 12px;
+    color: #111827;
+    margin-left: 8px;
+  }
+
+  /* ---------- Band 3 lead-in copy before cards ---------- */
+  .band-3 {
+    background: #f9fafb;
+  }
+  .band-3 .band-inner {
+    max-width: 1080px;
+  }
+
+  .pricing-toggle-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+  .toggle {
+    display: inline-flex;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #f3f4f6;
+    padding: 4px;
+  }
+  .toggle button {
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    background: transparent;
+    color: #6b7280;
+    padding: 8px 18px;
+    border-radius: 6px;
+    cursor: default;
+  }
+  .toggle button.active {
+    background: #ffffff;
+    color: #111827;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  }
+  .toggle .tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b7280;
+    margin-left: 6px;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+  }
+  .card.featured {
+    border: 2px solid #111827;
+  }
+  .card-name {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #ffffff;
+    background: #111827;
+    padding: 3px 7px;
+    border-radius: 4px;
+  }
+  .card-price {
+    font-size: 32px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .card-price span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b7280;
+  }
+  .card-billing-note {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 20px;
+  }
+  .card-recap {
+    list-style: none;
+    font-size: 13px;
+    color: #111827;
+    margin-bottom: 24px;
+    flex: 1;
+  }
+  .card-recap li {
+    padding: 6px 0;
+    border-top: 1px solid #f3f4f6;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .card-recap li:first-child {
+    border-top: none;
+  }
+  .card-recap .label {
+    color: #6b7280;
+  }
+  .card-recap .value {
+    font-weight: 600;
+    text-align: right;
+  }
+  .cta {
+    display: block;
+    width: 100%;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    padding: 11px 12px;
+    border-radius: 6px;
+    border: 1px solid #111827;
+    background: #ffffff;
+    color: #111827;
+    cursor: default;
+  }
+  .cta.primary {
+    background: #111827;
+    color: #ffffff;
+    border-color: #111827;
+  }
+</style>
+</head>
+<body>
+
+  <div class="page-head">
+    <h1>Plans &amp; Pricing</h1>
+    <p>Before we talk price, here's what every plan already includes — and what actually changes as you grow.</p>
+  </div>
+
+  <!-- ---------- Band 1: What you get with any plan ---------- -->
+  <section class="band band-1">
+    <div class="band-inner">
+      <div class="band-eyebrow">Band 1 — Baseline</div>
+      <h2>What you get with any plan</h2>
+
+      <div class="baseline-grid">
+        <div class="baseline-item">
+          <div class="baseline-icon">✓</div>
+          <h3>Unlimited workspaces</h3>
+          <p>Every tier can organize work into as many workspaces as you need.</p>
+        </div>
+        <div class="baseline-item">
+          <div class="baseline-icon">⏱</div>
+          <h3>14-day free trial</h3>
+          <p>Full access on any plan before you commit a card.</p>
+        </div>
+        <div class="baseline-item">
+          <div class="baseline-icon">↺</div>
+          <h3>Version history</h3>
+          <p>Every change is recoverable, on every plan, no add-on required.</p>
+        </div>
+        <div class="baseline-item">
+          <div class="baseline-icon">⇄</div>
+          <h3>Core integrations</h3>
+          <p>Connect the tools you already use from day one, no matter the tier.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- Band 2: Where it scales with you ---------- -->
+  <section class="band band-2">
+    <div class="band-inner">
+      <div class="band-eyebrow">Band 2 — What actually changes</div>
+      <h2>Where it scales with you</h2>
+
+      <div class="axis-list">
+
+        <div class="axis-row">
+          <div class="axis-copy">
+            <h3>Seats included</h3>
+            <p>Starter fits a small team; Growth and Scale open up as more people join.</p>
+          </div>
+          <div class="axis-bars">
+            <div class="bar-track">
+              <span class="bar-label">Starter</span>
+              <div class="bar-shell"><div class="bar-fill step-1"></div></div>
+              <span class="bar-value">3</span>
+            </div>
+            <div class="bar-track">
+              <span class="bar-label">Growth</span>
+              <div class="bar-shell"><div class="bar-fill step-2"></div></div>
+              <span class="bar-value">10</span>
+            </div>
+            <div class="bar-track">
+              <span class="bar-label">Scale</span>
+              <div class="bar-shell"><div class="bar-fill step-3"></div></div>
+              <span class="bar-value">∞</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="axis-row">
+          <div class="axis-copy">
+            <h3>Projects limit</h3>
+            <p>The number of active projects grows in step with the team using them.</p>
+          </div>
+          <div class="axis-bars">
+            <div class="bar-track">
+              <span class="bar-label">Starter</span>
+              <div class="bar-shell"><div class="bar-fill step-1"></div></div>
+              <span class="bar-value">5</span>
+            </div>
+            <div class="bar-track">
+              <span class="bar-label">Growth</span>
+              <div class="bar-shell"><div class="bar-fill step-2"></div></div>
+              <span class="bar-value">50</span>
+            </div>
+            <div class="bar-track">
+              <span class="bar-label">Scale</span>
+              <div class="bar-shell"><div class="bar-fill step-3"></div></div>
+              <span class="bar-value">∞</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="axis-row">
+          <div class="axis-copy">
+            <h3>Support level</h3>
+            <p>As you depend on the product more, you get a faster, more direct line to us.</p>
+          </div>
+          <div class="axis-dots">
+            <div class="dot-track">
+              <span class="bar-label">Starter</span>
+              <div class="dot-row">
+                <span class="dot filled-1"></span><span class="dot"></span><span class="dot"></span>
+                <span class="dot-value">Email</span>
+              </div>
+            </div>
+            <div class="dot-track">
+              <span class="bar-label">Growth</span>
+              <div class="dot-row">
+                <span class="dot filled-2"></span><span class="dot filled-2"></span><span class="dot"></span>
+                <span class="dot-value">Priority email</span>
+              </div>
+            </div>
+            <div class="dot-track">
+              <span class="bar-label">Scale</span>
+              <div class="dot-row">
+                <span class="dot filled-3"></span><span class="dot filled-3"></span><span class="dot filled-3"></span>
+                <span class="dot-value">Dedicated Slack</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="axis-row">
+          <div class="axis-copy">
+            <h3>API access</h3>
+            <p>Deeper integration comes online as your usage moves past read-only checks.</p>
+          </div>
+          <div class="axis-dots">
+            <div class="dot-track">
+              <span class="bar-label">Starter</span>
+              <div class="dot-row">
+                <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                <span class="dot-value">None</span>
+              </div>
+            </div>
+            <div class="dot-track">
+              <span class="bar-label">Growth</span>
+              <div class="dot-row">
+                <span class="dot filled-2"></span><span class="dot filled-2"></span><span class="dot"></span>
+                <span class="dot-value">Read-only</span>
+              </div>
+            </div>
+            <div class="dot-track">
+              <span class="bar-label">Scale</span>
+              <div class="dot-row">
+                <span class="dot filled-3"></span><span class="dot filled-3"></span><span class="dot filled-3"></span>
+                <span class="dot-value">Full</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- Band 3: the pricing cards ---------- -->
+  <section class="band band-3">
+    <div class="band-inner">
+      <div class="band-eyebrow">Band 3 — Pick your plan</div>
+      <h2>Now that you know what changes, here's what it costs</h2>
+
+      <div class="pricing-toggle-wrap">
+        <div class="toggle">
+          <button class="active" type="button">Monthly</button>
+          <button type="button">Annual <span class="tag">2 months free</span></button>
+        </div>
+      </div>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-name">Starter</div>
+          <div class="card-price">$19<span>/mo</span></div>
+          <div class="card-billing-note">billed monthly</div>
+          <ul class="card-recap">
+            <li><span class="label">Seats</span><span class="value">3</span></li>
+            <li><span class="label">Projects</span><span class="value">5</span></li>
+            <li><span class="label">Support</span><span class="value">Email</span></li>
+            <li><span class="label">API</span><span class="value">None</span></li>
+          </ul>
+          <button class="cta" type="button">Start free trial</button>
+        </div>
+
+        <div class="card featured">
+          <div class="card-name">Growth <span class="badge">Most popular</span></div>
+          <div class="card-price">$49<span>/mo</span></div>
+          <div class="card-billing-note">billed monthly</div>
+          <ul class="card-recap">
+            <li><span class="label">Seats</span><span class="value">10</span></li>
+            <li><span class="label">Projects</span><span class="value">50</span></li>
+            <li><span class="label">Support</span><span class="value">Priority email</span></li>
+            <li><span class="label">API</span><span class="value">Read-only</span></li>
+          </ul>
+          <button class="cta primary" type="button">Start free trial</button>
+        </div>
+
+        <div class="card">
+          <div class="card-name">Scale</div>
+          <div class="card-price">$149<span>/mo</span></div>
+          <div class="card-billing-note">billed monthly</div>
+          <ul class="card-recap">
+            <li><span class="label">Seats</span><span class="value">Unlimited</span></li>
+            <li><span class="label">Projects</span><span class="value">Unlimited</span></li>
+            <li><span class="label">Support</span><span class="value">Dedicated Slack</span></li>
+            <li><span class="label">API</span><span class="value">Full</span></li>
+          </ul>
+          <button class="cta" type="button">Talk to sales</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>
