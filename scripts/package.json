@@ -1,0 +1,10 @@
+{
+  "name": "ux-explorations-scripts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright screenshotting for feature iteration exports.",
+  "license": "MIT",
+  "dependencies": {
+    "playwright": "^1.61.1"
+  }
+}

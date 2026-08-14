@@ -1,0 +1,101 @@
+---
+name: generate-brief
+description: Use when the user wants to start a new feature but doesn't have a written brief/PRD yet — interview them to produce features/<slug>/brief.md.
+---
+
+# Generate Brief
+
+Turns a loose idea ("I need a new checkout page", "let's brief a store locator
+empty state") into a `brief.md` that `generate-ui-iterations` can run with
+directly, via a short interview instead of handing back a blank template.
+
+## Steps
+
+1. **Check what's already been said.** If the user's message already answers
+   some of the fields below, don't re-ask them — only ask for what's missing.
+
+2. **Read 1-2 existing briefs in `features/*/brief.md` before interviewing**
+   (e.g. `features/analytics-dashboard/brief.md` for a rich one,
+   `features/auth-login/brief.md` for a thin one) as a depth/shape
+   reference — not to copy their content, but so the questions you ask and
+   the brief you write aim at that level of substance instead of a bare
+   five-liner. Don't reference the example features' content in the new
+   brief — they're illustrations of depth, not a shared product context.
+
+3. **Ask for the missing fields**, plain conversational questions, not a
+   form dump — a couple at a time reads better than six at once. Core fields
+   (always get these):
+   - What is it (the page/feature, one line)
+   - Who uses it
+   - What it must include (key content/actions)
+   - Tone/style
+   - Brand — check `tokens/` first: if there's exactly one non-default
+     sheet, assume that; if there are several, use `AskUserQuestion` with one
+     option per filename stem plus "Neutral / default tokens"; if there's
+     only `default.css`, don't ask at all, just write `neutral`
+   - Reference — do they have screenshots/links to riff on? Optional; if
+     yes, tell them to drop files in `features/<slug>/reference/` (create the
+     folder for them if they hand you something to save)
+
+   Depth fields (ask if not obviously overkill for the ask — a one-off empty
+   state doesn't need all of these, a landing page redesign does):
+   - Why now / what's broken today (the problem this is solving, not just
+     the solution)
+   - How success gets judged, if they have a metric in mind (CTR, bounce
+     rate, completion rate...) — skip if they clearly don't have one yet,
+     don't make them invent a KPI
+   - Any seed ideas or directions they already have in mind, even half-formed
+
+   Skip asking about variant count or fidelity tiers unless the user brings
+   it up — `generate-ui-iterations` already has sane defaults (3 variants,
+   lofi+hifi each); don't make them make decisions they don't need to make.
+
+4. **Derive a kebab-case slug** from the feature name (e.g. "Checkout
+   Confirmation Page" → `checkout-confirmation`). If `features/<slug>/`
+   already exists, say so and ask whether they mean to add to that feature
+   or need a different slug — don't silently overwrite an existing brief.
+
+5. **Write `features/<slug>/brief.md`.** Match depth to what the interview
+   actually surfaced — don't invent substance that wasn't given, but don't
+   flatten real substance into one-liners either:
+
+   - **Thin input** (only the core fields, nothing more offered): the flat
+     template, same as `GUIDE_FOR_NON_TECHNICAL_USERS.md` uses, so what
+     non-technical users see there matches what gets written here:
+
+     ```
+     # <Page/feature name>
+
+     What is it: <one line>
+     Who uses it: <one line>
+     Must include: <comma-separated list>
+     Tone/style: <one line>
+     Brand: <token sheet name in tokens/, or "neutral">
+     Reference: <"none" or a note pointing at reference/>
+     ```
+
+   - **Richer input** (a background/problem, a metric, seed ideas): write
+     proper sections instead, e.g. `## Background`, `## How Might We` or
+     `## Problem Statement`, `## Target Audience`, `## Must Include` /
+     `## Requirements`, `## Seed Ideas` (if given), `## Success Metrics` (if
+     given), `## Out of Scope`. Look at `features/analytics-dashboard/brief.md`
+     for what this shape looks like in practice — pick sections that fit what
+     you actually gathered, don't pad with empty ones just to hit the same
+     section count.
+
+6. **Confirm and offer the next step.** Show them the written brief.md path
+   and ask if they want mockups generated now (hands off to
+   `generate-ui-iterations`) or if they'd rather review/edit the brief
+   first — don't auto-chain into generation without asking, since they may
+   want to add reference images first.
+
+## Notes
+
+- This skill only writes `brief.md` (and creates `reference/` if asked to
+  save files there) — it never touches `iterations/`, that's
+  `generate-ui-iterations`'s job.
+- If the user pastes something that's already a complete brief (not a vague
+  idea), skip the interview — just confirm the slug and write it as given,
+  same as `generate-ui-iterations` step 1 already does. This skill exists
+  for the "I don't know where to start" case, not to gate briefs that are
+  already written.

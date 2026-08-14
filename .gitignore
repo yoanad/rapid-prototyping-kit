@@ -1,0 +1,9 @@
+.DS_Store
+node_modules/
+
+# local, machine-specific — contains absolute paths
+.claude/settings.local.json
+
+# generated artifacts
+features/*/iterations/screenshots/
+*.zip

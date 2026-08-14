@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ux-explorations: dev walkthrough</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #6664F1;
+    --purple-light: #A29AFF;
+    --purple-pale: #F0EFFF;
+    --purple-band: #EEF0FF;
+    --yellow: #FFF300;
+    --white: #FFFFFF;
+    --black: #111111;
+    --muted: #78788a;
+    --text: #1a1a2e;
+    --rule: #E4E3F0;
+    --code-bg: #F7F7FB;
+    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--white);
+    color: var(--text);
+    font-family: var(--font-body);
+    height: 100%;
+    overflow: hidden;
+  }
+  ::selection { background: var(--purple); color: #fff; }
+
+  .slide {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: var(--white);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+    padding: 4vh 5vw; overflow: hidden;
+  }
+  .slide.active { opacity: 1; pointer-events: all; }
+
+  .content {
+    width: 100%;
+    max-width: 900px;
+    text-align: left;
+  }
+
+  /* progress bar */
+  .progress-bar { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: rgba(102,100,241,0.12); z-index: 300; }
+  .progress-fill { height: 100%; width: 0%; background: var(--purple); transition: width 0.3s ease; }
+
+  /* back button */
+  #back-btn {
+    position: fixed; top: 1.5vh; left: 1.5vw;
+    font-size: 1.2rem; color: var(--muted);
+    cursor: pointer; z-index: 200;
+    opacity: 0.4; transition: opacity 0.2s;
+  }
+  #back-btn:hover { opacity: 1; }
+
+  /* counter */
+  #counter {
+    position: fixed; bottom: 1.8vh; right: 2vw;
+    font-family: var(--font-mono); font-size: 0.75rem;
+    color: var(--muted); z-index: 200; letter-spacing: 0.05em;
+  }
+
+  /* label chip */
+  .label-chip {
+    position: absolute; top: 2.5vh; left: 2.5vw;
+    font-size: 0.6rem; font-weight: 600;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--purple); background: var(--purple-pale);
+    border: 1px solid rgba(102,100,241,0.25);
+    border-radius: 4px; padding: 0.25rem 0.6rem;
+    z-index: 10;
+  }
+
+  h1.headline, h2.headline {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 1.15;
+    margin: 0 0 0.6rem 0;
+    color: var(--text);
+  }
+  h2.headline { font-size: clamp(1.8rem, 3.4vw, 2.7rem); }
+
+  .kicker {
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    color: var(--muted);
+    line-height: 1.55;
+    margin: 0 0 1.6rem 0;
+    max-width: 760px;
+  }
+  .body-copy {
+    font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+    line-height: 1.65;
+    color: var(--text);
+  }
+  .inline-code {
+    font-family: var(--font-mono);
+    background: var(--purple-pale);
+    color: var(--purple);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+
+  /* code / tree blocks */
+  .code-block {
+    background: var(--code-bg);
+    border-left: 3px solid var(--purple);
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: #33334a;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .code-block .c { color: var(--muted); }
+  .code-block .hi { color: var(--purple); font-weight: 600; }
+
+  /* title slide */
+  .title-slide { align-items: center; justify-content: center; }
+  @keyframes morphBlob {
+    0%, 100% { border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%; }
+    33% { border-radius: 40% 60% 30% 70% / 60% 40% 50% 50%; }
+    66% { border-radius: 70% 30% 50% 50% / 40% 60% 60% 40%; }
+  }
+  .title-blob {
+    position: absolute;
+    width: clamp(320px, 55vw, 700px);
+    height: clamp(220px, 40vh, 500px);
+    background: linear-gradient(135deg, #eeeeff 0%, #fff9b0 55%, #e8e8ff 100%);
+    opacity: 0.5;
+    animation: morphBlob 8s ease-in-out infinite;
+    z-index: 0;
+  }
+  .title-headline {
+    font-family: var(--font-display);
+    font-size: clamp(2.6rem, 6vw, 4.6rem);
+    margin: 0 0 1rem 0;
+    color: var(--text);
+    z-index: 1;
+  }
+  .title-sub {
+    font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+    color: var(--muted);
+    max-width: 620px;
+    text-align: center;
+    line-height: 1.55;
+    margin: 0 0 0.6rem 0;
+    z-index: 1;
+  }
+  .title-meta {
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--purple-light);
+    z-index: 1;
+  }
+
+  /* step list ("skill boxes") */
+  .step-list { width: 100%; display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.4rem; }
+  .step {
+    display: flex; align-items: flex-start; gap: 1.1rem;
+    background: #F7F7FB; border-left: 3px solid var(--purple-light);
+    border-radius: 0 8px 8px 0; padding: 0.7rem 1.3rem;
+  }
+  .step-num {
+    font-family: var(--font-mono); font-weight: 700; color: var(--purple);
+    min-width: 1.4rem; flex-shrink: 0; font-size: 0.95rem; padding-top: 0.1rem;
+  }
+  .step-body { flex: 1; }
+  .step-title { font-weight: 700; color: var(--text); font-size: 0.98rem; }
+  .step-desc { color: #555; font-size: 0.88rem; line-height: 1.5; margin-top: 0.15rem; }
+  .step.highlight {
+    background: var(--purple-band);
+    border-left: 3px solid var(--purple);
+  }
+  .step.highlight .step-title { color: var(--purple); }
+  .why-note {
+    font-size: 0.85rem; color: var(--muted); font-style: italic;
+    margin-top: 0.45rem; padding-left: 0.1rem;
+  }
+
+  /* brief excerpt */
+  .brief-source {
+    font-family: var(--font-mono); font-size: 0.85rem; color: var(--purple);
+    margin-bottom: 1.2rem;
+  }
+  .brief-section { margin-bottom: 1.1rem; }
+  .brief-label {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 0.35rem;
+  }
+  .brief-text { font-size: 0.98rem; line-height: 1.6; color: var(--text); }
+  .brief-list { margin: 0; padding-left: 1.2rem; font-size: 0.95rem; line-height: 1.55; color: var(--text); }
+  .brief-list li { margin-bottom: 0.25rem; }
+
+  /* demo slide */
+  .demo-slide .content { text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .demo-button {
+    display: inline-block;
+    background: var(--purple);
+    color: #fff;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+    padding: 1.1rem 2.6rem;
+    border-radius: 10px;
+    text-decoration: none;
+    margin: 1.6rem 0 1.1rem 0;
+    box-shadow: 0 10px 30px rgba(102,100,241,0.28);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .demo-button:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(102,100,241,0.36); }
+  .demo-caption { font-size: 0.9rem; color: var(--muted); font-family: var(--font-mono); }
+
+  /* architecture card grid */
+  .card-grid { display: flex; gap: 1.1rem; width: 100%; margin-top: 1rem; align-items: stretch; }
+  .card {
+    flex: 1; display: flex; flex-direction: column;
+    background: #F7F7FB; border: 1px solid var(--rule); border-radius: 10px;
+    padding: 1.2rem 1.3rem;
+    opacity: 0; transform: translateY(16px);
+  }
+  .card.visible { animation: cardFadeInUp 0.5s cubic-bezier(.22,1,.36,1) forwards; }
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.18s; }
+  .card:nth-child(3) { animation-delay: 0.31s; }
+  @keyframes cardFadeInUp { to { opacity: 1; transform: translateY(0); } }
+  .card-name { font-family: var(--font-mono); font-weight: 700; color: var(--purple); font-size: 1rem; margin-bottom: 0.5rem; }
+  .card-desc { font-size: 0.86rem; line-height: 1.5; color: #444; flex: 1; }
+  .card-example { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); margin-top: 0.8rem; padding-top: 0.6rem; border-top: 1px solid var(--rule); word-break: break-all; }
+
+  /* prompt callout (a chat message, not a shell command) */
+  .prompt-box {
+    background: var(--purple-pale);
+    border: 1px solid rgba(102,100,241,0.3);
+    border-radius: 10px;
+    padding: 1rem 1.4rem;
+    font-family: var(--font-mono);
+    font-size: 1.05rem;
+    color: var(--purple);
+    margin: 1.2rem 0 0.6rem 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<div id="back-btn">←</div>
+<div id="counter">1 / 8</div>
+
+<!-- 1: TITLE -->
+<div class="slide title-slide active" id="slide-1">
+  <div class="title-blob"></div>
+  <h1 class="title-headline">ux&#8288;-&#8288;explorations</h1>
+  <p class="title-sub">You write a brief, a handful of agents each take a genuinely different direction, and you're looking at real HTML the same day, not next sprint.</p>
+  <p class="title-meta">🛠️ Dev walkthrough</p>
+</div>
+
+<!-- 2: WHAT IT IS -->
+<div class="slide" id="slide-2">
+  <div class="label-chip">🎯 The idea</div>
+  <div class="content">
+    <h2 class="headline">It's a design sprint, minus the sprint.</h2>
+    <p class="kicker">A design sprint normally means days in a room: diverge into a few genuinely different concepts, sketch each one, then build a single prototype to react to. The diverging and the sketching stay. The days don't. Feed in a brief, N agents each take one distinct direction in parallel, and real HTML comes out the same afternoon.</p>
+    <p class="body-copy" style="margin-bottom: 1.4rem;">Every direction ships at two <strong>tiers</strong>: <strong>lofi</strong> is the grayscale wireframe, no color, boxes standing in for icons, just the layout argument. <strong>Hifi</strong> is the real thing: brand color, type, copy, photos. Both come out of the same run, and it's just HTML you open straight in a browser.</p>
+    <div class="code-block"><span class="c">features/&lt;feature-slug&gt;/</span>
+  brief.md              <span class="c"># the PRD/direction, as given</span>
+  reference/             <span class="c"># optional: screenshots, existing designs</span>
+  iterations/
+    <span class="hi">v1-&lt;angle&gt;-lofi.html</span>    <span class="c"># grayscale wireframe</span>
+    <span class="hi">v1-&lt;angle&gt;-hifi.html</span>    <span class="c"># branded, production-real</span>
+    <span class="hi">index.html</span>              <span class="c"># tabs + iframe viewer</span>
+  export/                <span class="c"># zip + side-by-side PDF</span></div>
+  </div>
+</div>
+
+<!-- 3: ARCHITECTURE -->
+<div class="slide" id="slide-3">
+  <div class="label-chip">🧩 Architecture</div>
+  <div class="content">
+    <h2 class="headline">Three pieces, not a framework</h2>
+    <p class="kicker">Just three kinds of file, each doing exactly one job, small enough to read in five minutes and understand the whole system.</p>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-name">Skill</div>
+        <div class="card-desc">A markdown file of instructions: Claude Code reads it and just... follows it. This is where the judgment calls live: picking angles, writing a brief.</div>
+        <div class="card-example">.claude/skills/generate-ui-iterations/SKILL.md</div>
+      </div>
+      <div class="card">
+        <div class="card-name">Script</div>
+        <div class="card-desc">Actual code, for once. A skill shells out here for the mechanical stuff that shouldn't be re-reasoned about every time: taking a screenshot.</div>
+        <div class="card-example">scripts/screenshot.js</div>
+      </div>
+      <div class="card">
+        <div class="card-name">Template</div>
+        <div class="card-desc">A static file, copied as-is and filled in with this feature's title and angles. Keeps every feature's viewer looking the same instead of rebuilt from scratch each time.</div>
+        <div class="card-example">.claude/skills/generate-ui-iterations/templates/index-template.html</div>
+      </div>
+    </div>
+    <div class="code-block" style="margin-top: 1.1rem; font-size: 0.74rem;">ux&#8288;-&#8288;explorations/
+  <span class="hi">.claude/skills/&lt;name&gt;/</span>   <span class="c"># skills + templates live here</span>
+  <span class="hi">scripts/</span>                <span class="c"># screenshot.js</span>
+  features/&lt;slug&gt;/          <span class="c"># output: one folder per feature</span>
+  docs/                        <span class="c"># this walkthrough</span></div>
+  </div>
+</div>
+
+<!-- 4: HOW IT WORKS -->
+<div class="slide" id="slide-4">
+  <div class="label-chip">⚙️ How it works</div>
+  <div class="content">
+    <h2 class="headline">generate-ui-iterations, step by step</h2>
+    <p class="kicker">This is a "skill": a markdown file of instructions that Claude Code follows by name. Runs once per brief. Steps 3 and 4 are the ones that decide whether you get real directions or three recolors of the same one.</p>
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Write the brief</div>
+          <div class="step-desc">Kebab-case slug, <span class="inline-code">brief.md</span> saved verbatim. Defaults to 3 variants × 2 tiers unless the brief says otherwise.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Pull real design tokens</div>
+          <div class="step-desc">Reads literal color, spacing, and type values from any design-token CSS in <span class="inline-code">tokens/</span> — your own, or the neutral fallback that ships with the repo.</div>
+        </div>
+      </div>
+      <div class="step highlight">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Pick N angles</div>
+          <div class="step-desc">Done once, up front, by the orchestrator, never handed to the agents that build the mockups.</div>
+          <div class="why-note">Why: those agents run at the same time and can't see each other's work. Hand them the angle choice and you'd get three recolors of one layout. So the orchestrator decides up front, every time.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Fan out 2N agents, in parallel</div>
+          <div class="step-desc">One agent per angle × tier, all dispatched in a single message. Each gets the full brief, resolved tokens, its one angle, and its exact output path, nothing else.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <div class="step-title">Build index.html</div>
+          <div class="step-desc">Same shared template every time, just filled in with this feature's title and angles. Nobody writes this file from scratch per feature.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <div class="step-title">Report back</div>
+          <div class="step-desc">File paths + one line per angle.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5: EXAMPLE BRIEF -->
+<div class="slide" id="slide-5">
+  <div class="label-chip">📋 Example</div>
+  <div class="content">
+    <h2 class="headline">What a real brief actually looks like</h2>
+    <div class="brief-source">features/expert-availability-signal/brief.md (verbatim, trimmed for space)</div>
+    <div class="brief-section">
+      <div class="brief-label">How Might We</div>
+      <div class="brief-text">How might we instantly signal whether an expert is ready so users feel confident clicking before they've committed to anything?</div>
+    </div>
+    <div class="brief-section">
+      <div class="brief-label">Requirements</div>
+      <ul class="brief-list">
+        <li>Must communicate <strong>live/real-time status</strong>, not just "this service exists"</li>
+        <li>Should feel human, not a generic system-status dot</li>
+        <li>Must work as a <strong>pre-commitment cue</strong>: visible before the click, not after</li>
+        <li>Lightweight: an ambient signal, not a new page section</li>
+      </ul>
+    </div>
+    <div class="brief-section" style="margin-bottom: 0;">
+      <div class="brief-label">Fidelity &amp; scope for this round</div>
+      <div class="brief-text">Low-fidelity only, single tier. Grayscale wireframes, no brand color. 5 variants.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 6: LIVE DEMO -->
+<div class="slide demo-slide" id="slide-6">
+  <div class="label-chip">▶️ Demo</div>
+  <div class="content">
+    <h2 class="headline">And here's what that brief turned into</h2>
+    <p class="kicker" style="margin: 0 auto;">6 angles, lofi and hifi each, tabbed side by side. Go ahead, click through them.</p>
+    <a class="demo-button" href="../features/expert-availability-signal/iterations/index.html" target="_blank" rel="noopener">Open the live demo →</a>
+    <div class="demo-caption">features/expert-availability-signal/iterations/index.html</div>
+  </div>
+</div>
+
+<!-- 7: ALSO WORTH KNOWING -->
+<div class="slide" id="slide-7">
+  <div class="label-chip">🔍 Good to know</div>
+  <div class="content">
+    <h2 class="headline">A few things worth knowing before you try it</h2>
+    <div class="step-list">
+      <div class="step">
+        <div class="step-body">
+          <div class="step-title">Plain HTML, no build</div>
+          <div class="step-desc">No build step: every mockup is one file you can open with a double-click.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-body">
+          <div class="step-title">Re-running never overwrites</div>
+          <div class="step-desc">Ask for "2 more directions" and it appends <span class="inline-code">v{n+1}-...</span> files and regenerates <span class="inline-code">index.html</span>. Old variants stay right where they were.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-body">
+          <div class="step-title">Defaults are just defaults</div>
+          <div class="step-desc">The brief's own words win. The example brief you just saw said "lofi only, 5 variants," and that's exactly, only, what it got.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-body">
+          <div class="step-title">Reference materials actually get used</div>
+          <div class="step-desc">Screenshots or existing designs dropped in a feature's <span class="inline-code">reference/</span> folder get read by the agents building the hifi tier, not just filed away.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 8: RUN IT YOURSELF -->
+<div class="slide" id="slide-8">
+  <div class="label-chip">🚀 Try it</div>
+  <div class="content">
+    <h2 class="headline">You just watched one skill. There are two more.</h2>
+    <p class="kicker">Everything demoed today was <span class="inline-code">generate-ui-iterations</span>, the middle of the pipeline. The rest is just as many skills, each one just a sentence in chat.</p>
+    <div class="step-list">
+      <div class="step">
+        <div class="step-body">
+          <div class="step-title">No brief yet? Use generate-brief</div>
+          <div class="step-desc">Interviews you for one, writes <span class="inline-code">brief.md</span>. Never auto-runs the next step.</div>
+        </div>
+      </div>
+      <div class="step highlight">
+        <div class="step-body">
+          <div class="step-title">generate-ui-iterations</div>
+          <div class="step-desc">What you just saw. Brief in, real directions out.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-body">
+          <div class="step-title">Want to check the output fast? Use screenshot-iterations</div>
+          <div class="step-desc">Drives Playwright to screenshot every variant, so you can review without opening each HTML file by hand.</div>
+        </div>
+      </div>
+    </div>
+    <p class="body-copy" style="margin-top: 1.4rem;">Same brief, same day. That's the whole point.</p>
+    <div class="prompt-box">"Generate 3 directions for &lt;brief&gt;"</div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var slides = document.querySelectorAll('.slide');
+    var total = slides.length;
+    var current = 0;
+    var fill = document.getElementById('progressFill');
+    var counter = document.getElementById('counter');
+
+    function render() {
+      slides.forEach(function (s, i) { s.classList.toggle('active', i === current); });
+      fill.style.width = (total > 1 ? current / (total - 1) * 100 : 0) + '%';
+      counter.textContent = (current + 1) + ' / ' + total;
+      var activeSlide = slides[current];
+      activeSlide.querySelectorAll('.card').forEach(function (c) {
+        c.classList.remove('visible');
+        void c.offsetWidth;
+        c.classList.add('visible');
+      });
+    }
+    function goTo(i) {
+      current = Math.min(total - 1, Math.max(0, i));
+      render();
+    }
+    function goNext() { goTo(current + 1); }
+    function goPrev() { goTo(current - 1); }
+
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('#back-btn')) return;
+      if (e.target.closest('a')) return;
+      goNext();
+    });
+    document.getElementById('back-btn').addEventListener('click', function (e) {
+      e.stopPropagation();
+      goPrev();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goNext(); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); goPrev(); }
+    });
+
+    render();
+  })();
+</script>
+
+</body>
+</html>

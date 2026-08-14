@@ -1,0 +1,53 @@
+/* Brand-neutral fallback tokens.
+   Drop your own CSS custom-property sheet in this directory (any filename)
+   and the design-system-tokens skill will prefer it over this file.
+   These values exist so mockups don't look unstyled — they are not a
+   design system and no brand owns them. */
+
+:root {
+  /* color */
+  --ds-color-bg: #ffffff;
+  --ds-color-surface: #f9fafb;
+  --ds-color-surface-alt: #f3f4f6;
+  --ds-color-text: #111827;
+  --ds-color-text-muted: #6b7280;
+  --ds-color-border: #e5e7eb;
+  --ds-color-accent: #4f46e5;
+  --ds-color-accent-hover: #4338ca;
+  --ds-color-accent-contrast: #ffffff;
+  --ds-color-focus: #4f46e5;
+
+  /* status */
+  --ds-color-success: #16a34a;
+  --ds-color-warning: #d97706;
+  --ds-color-danger: #dc2626;
+
+  /* spacing */
+  --ds-spacing-1: 0.25rem;
+  --ds-spacing-2: 0.5rem;
+  --ds-spacing-3: 0.75rem;
+  --ds-spacing-4: 1rem;
+  --ds-spacing-6: 1.5rem;
+  --ds-spacing-8: 2.5rem;
+
+  /* radius */
+  --ds-radius-sm: 0.25rem;
+  --ds-radius-md: 0.5rem;
+  --ds-radius-full: 9999px;
+
+  /* font-size */
+  --ds-font-size-xs: 0.75rem;
+  --ds-font-size-sm: 0.875rem;
+  --ds-font-size-base: 1rem;
+  --ds-font-size-lg: 1.125rem;
+  --ds-font-size-xl: 1.5rem;
+  --ds-font-size-3xl: 2rem;
+
+  /* font */
+  --ds-font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --ds-font-heading: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* shadow */
+  --ds-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --ds-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
