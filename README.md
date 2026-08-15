@@ -6,9 +6,15 @@ Claude Code skills that turn a written brief into genuinely distinct lofi +
 hifi HTML mockups. No build step — every mockup is self-contained HTML you
 open via `file://`. Bring your own design tokens.
 
-![Analytics Dashboard example — three directions, lofi/hifi tabs, hero chart with an anomaly callout](docs/index-screenshot.png)
+![One line in chat: the brief interview, then six agents generating three directions in parallel, then clicking through the results](docs/demo.gif)
+
+*One line in chat → an interview to fill in the brief → six agents in parallel →
+three directions at two fidelity tiers, in a tabbed viewer. Real time: about
+four minutes.*
 
 ## Where this fits in a design sprint
+
+![The five-day design sprint with the Sketch day marked as automated and Prototype marked as getting a head start](docs/design-sprint-diagram.png)
 
 The five-day sprint runs Understand → Sketch → Decide → Prototype →
 Validate, and Sketch gets a whole day of its own because divergence has to
