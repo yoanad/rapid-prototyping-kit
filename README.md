@@ -1,4 +1,4 @@
-# ux-explorations
+# rapid-prototyping-kit
 
 Claude Code skills that turn a written brief into genuinely distinct lofi +
 hifi HTML mockups. Bring your own design tokens.
@@ -12,6 +12,26 @@ themselves — everything is plain self-contained HTML opened via `file://`.
 Not technical? Start with
 [`GUIDE_FOR_NON_TECHNICAL_USERS.md`](GUIDE_FOR_NON_TECHNICAL_USERS.md)
 instead — this README assumes you're comfortable in a terminal.
+
+## Where this fits in a design sprint
+
+The classic five-day design sprint runs Understand → Sketch → Decide →
+Prototype → Validate: a day of divergent sketching so the team isn't
+deciding between one idea and nothing, a day of building whichever idea won
+into something realistic enough to put in front of users, then a day of
+testing it.
+
+Those middle days are where this kit fits. Sketch needs *several genuinely
+different* directions, not one polished guess — and Prototype needs each of
+those directions built out enough to react to, not a napkin drawing. Doing
+both by hand is most of a sprint's calendar time. This kit collapses them:
+give it a brief, get back a handful of distinct directions, each already at
+two fidelity tiers — a lofi wireframe to argue about structure before
+anyone's distracted by color, and a hifi pass real enough to hand to a user
+in a Validate session. What used to take two days of a room full of
+designers now takes one Claude Code conversation, leaving the actual sprint
+time for the parts that need humans: picking a direction and watching real
+people react to it.
 
 ## Requirements
 

@@ -13,7 +13,7 @@ So a typical batch is 6 web pages you can click through and view (3 directions �
 ## Folder Structure Explained
 
 ```
-ux-explorations/
+rapid-prototyping-kit/
 ├── features/                    ← Your design projects go here
 │   ├── auth-login/               ← Example project
 │   ├── pricing-page/              ← Example project

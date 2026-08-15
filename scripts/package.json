@@ -1,5 +1,5 @@
 {
-  "name": "ux-explorations-scripts",
+  "name": "rapid-prototyping-kit-scripts",
   "version": "1.0.0",
   "private": true,
   "description": "Playwright screenshotting for feature iteration exports.",
