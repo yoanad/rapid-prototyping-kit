@@ -1,37 +1,33 @@
 # rapid-prototyping-kit
 
+**It's a design sprint, minus the sprint.**
+
 Claude Code skills that turn a written brief into genuinely distinct lofi +
-hifi HTML mockups. Bring your own design tokens.
+hifi HTML mockups. No build step — every mockup is self-contained HTML you
+open via `file://`. Bring your own design tokens.
 
 ![Analytics Dashboard example — three directions, lofi/hifi tabs, hero chart with an anomaly callout](docs/index-screenshot.png)
 
-Give a PRD/brief + direction, get back a few distinct low-fidelity and
-high-fidelity static HTML mockups. No build step for the mockups
-themselves — everything is plain self-contained HTML opened via `file://`.
+## Where this fits in a design sprint
+
+The five-day sprint runs Understand → Sketch → Decide → Prototype →
+Validate, and Sketch gets a whole day of its own because divergence has to
+be protected from production — you can't decide between one idea and
+nothing.
+
+Sketch and Prototype are the days this kit collapses: one brief in, a
+handful of genuinely different directions out, each already at two fidelity
+tiers — a lofi wireframe for arguing about structure before anyone's
+distracted by color, and a hifi pass real enough to hand to a user in a
+Validate session.
+
+It doesn't replace a sprint. There's no facilitated Decide here and no user
+in the room. It makes the diverge part affordable when there's no capacity
+to run the real thing.
 
 Not technical? Start with
 [`GUIDE_FOR_NON_TECHNICAL_USERS.md`](GUIDE_FOR_NON_TECHNICAL_USERS.md)
 instead — this README assumes you're comfortable in a terminal.
-
-## Where this fits in a design sprint
-
-The classic five-day design sprint runs Understand → Sketch → Decide →
-Prototype → Validate: a day of divergent sketching so the team isn't
-deciding between one idea and nothing, a day of building whichever idea won
-into something realistic enough to put in front of users, then a day of
-testing it.
-
-Those middle days are where this kit fits. Sketch needs *several genuinely
-different* directions, not one polished guess — and Prototype needs each of
-those directions built out enough to react to, not a napkin drawing. Doing
-both by hand is most of a sprint's calendar time. This kit collapses them:
-give it a brief, get back a handful of distinct directions, each already at
-two fidelity tiers — a lofi wireframe to argue about structure before
-anyone's distracted by color, and a hifi pass real enough to hand to a user
-in a Validate session. What used to take two days of a room full of
-designers now takes one Claude Code conversation, leaving the actual sprint
-time for the parts that need humans: picking a direction and watching real
-people react to it.
 
 ## Requirements
 
@@ -40,6 +36,11 @@ people react to it.
 - macOS or Linux
 
 ## Quickstart
+
+```
+git clone https://github.com/yoanad/rapid-prototyping-kit
+cd rapid-prototyping-kit
+```
 
 This repo is designed to be driven through Claude Code chat, not by
 hand-writing files. Open the repo in Claude Code and:
@@ -174,6 +175,4 @@ to stay identical to the template outside its title/subtitle/angles.
 `CLAUDE.md` is the source of truth for exact workflow rules (how many
 variants, when files get appended vs. overwritten, design token lookup
 rules, screenshot commands) — read it if you're extending a skill or
-debugging unexpected output. See also
-[`docs/dev-walkthrough.html`](docs/dev-walkthrough.html) for a slide-deck
-walkthrough of the whole pipeline.
+debugging unexpected output.

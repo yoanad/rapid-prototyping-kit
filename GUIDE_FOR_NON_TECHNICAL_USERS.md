@@ -26,23 +26,27 @@ Each project folder contains:
 - **reference/** — optional: screenshots, inspiration, existing designs
 - **iterations/** — the mockups generated (HTML files you open in your browser)
 
+Get the folder onto your computer once (someone technical on your team can
+do this part), then open it in [Claude Code](https://claude.com/claude-code):
+
+```
+git clone https://github.com/yoanad/rapid-prototyping-kit
+cd rapid-prototyping-kit
+```
+
 ## How to Use
 
 **Easiest path:** just tell Claude your brief in chat (copy the template
 below into your message) and ask for mockups — it creates the project
-folder and `brief.md` for you. Steps 1–2 below are only if you'd rather
-write the file yourself first.
+folder and `brief.md` for you.
 
-### Step 1: Create a New Project (optional)
-
-1. Open Finder, go to `features/`
-2. Create a new folder with a simple name (use hyphens, no spaces)
-   - Example: `checkout-flow` or `product-hero`
-
-### Step 2: Write Your Brief
+### Step 1: Write Your Brief
 
 Copy this template and fill in the blanks — in a `brief.md` file, or
-straight into your message to Claude:
+straight into your message to Claude. (Writing the file yourself is
+optional — create a folder under `features/` with a simple hyphenated name
+like `checkout-flow`, but Claude will do this for you if you just paste the
+brief into chat.)
 
 ```
 # <Page/feature name>
@@ -86,7 +90,7 @@ Have a design system? Drop a `.css` file with your brand's colors into
 same name on the `Brand:` line of your brief. See `tokens/README.md` for the
 exact format. No file there yet? Mockups just use the neutral default look.
 
-### Step 3: Add Reference (Optional)
+### Step 2: Add Reference (Optional)
 
 Create a folder called `reference/` inside your project and:
 - Paste screenshots of existing designs you like
@@ -95,7 +99,7 @@ Create a folder called `reference/` inside your project and:
 
 **Note:** Not required — the tool will work without this.
 
-### Step 4: Request Mockups
+### Step 3: Request Mockups
 
 Tell Claude Code what you want — paste your filled-in brief, or say something like:
 
@@ -103,7 +107,7 @@ Tell Claude Code what you want — paste your filled-in brief, or say something 
 
 The tool will create HTML mockups (lofi + hifi for each direction) in the `iterations/` folder.
 
-### Step 5: View Your Mockups
+### Step 4: View Your Mockups
 
 1. In Finder, go to `features/your-project/iterations/`
 2. Open `index.html` (double-click it)
@@ -159,9 +163,8 @@ Not easily, but you can:
 
 ## Next Steps
 
-1. Create a folder for your first project
-2. Write a brief
-3. Ask Claude to generate mockups
-4. Open and review in your browser
+1. Write a brief
+2. Ask Claude to generate mockups
+3. Open and review in your browser
 
 Questions? Just ask — Claude can explain anything about this tool.
