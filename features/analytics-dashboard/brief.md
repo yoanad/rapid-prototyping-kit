@@ -60,6 +60,17 @@ more than marketing polish.
 - The anomaly is impossible to miss, even in the least narrative-driven
   layout.
 
+## Sprint Questions
+
+What a Validate session with real users would need to answer before any of
+these directions ships:
+
+- Does the anomaly-first layout's callout actually get read, or does a
+  five-second glance skip straight past an annotation to the number?
+- Does promoting one metric to "selected"/hero status change which metric
+  someone assumes matters most this week, independent of what's actually
+  happening in the data?
+
 ## Out of Scope
 
 - Real data pipeline, filtering/date-range controls, or drill-down

@@ -14,12 +14,14 @@ directly, via a short interview instead of handing back a blank template.
 1. **Check what's already been said.** If the user's message already answers
    some of the fields below, don't re-ask them — only ask for what's missing.
 
-2. **Read 1-2 existing briefs in `features/*/brief.md` before interviewing**
-   (e.g. `features/analytics-dashboard/brief.md` for a rich one,
-   `features/auth-login/brief.md` for a thin one) as a depth/shape
-   reference — not to copy their content, but so the questions you ask and
-   the brief you write aim at that level of substance instead of a bare
-   five-liner. Don't reference the example features' content in the new
+2. **Read an existing richer brief under `features/*/brief.md`** before
+   interviewing (any one that uses `##` sections rather than the flat
+   template), as a depth/shape reference for richer input — not to copy its
+   content, but so the questions you ask and the brief you write aim at that
+   level of substance instead of a bare five-liner when the interview
+   actually surfaces that much. For thin input, the flat template in step 5
+   below is the reference — don't pad it out just because the example you
+   read is longer. Don't reference the example features' content in the new
    brief — they're illustrations of depth, not a shared product context.
 
 3. **Ask for the missing fields**, plain conversational questions, not a
@@ -74,14 +76,57 @@ directly, via a short interview instead of handing back a blank template.
      Reference: <"none" or a note pointing at reference/>
      ```
 
-   - **Richer input** (a background/problem, a metric, seed ideas): write
-     proper sections instead, e.g. `## Background`, `## How Might We` or
-     `## Problem Statement`, `## Target Audience`, `## Must Include` /
-     `## Requirements`, `## Seed Ideas` (if given), `## Success Metrics` (if
-     given), `## Out of Scope`. Look at `features/analytics-dashboard/brief.md`
-     for what this shape looks like in practice — pick sections that fit what
-     you actually gathered, don't pad with empty ones just to hit the same
-     section count.
+   - **Richer input** (a background/problem, a metric, seed ideas): use this
+     fixed section order every time, not an ad hoc pick — a design-sprint
+     "Understand" writeup, not a free-form doc. Look at any richer
+     `features/*/brief.md` for what it looks like filled in. Omit a section
+     entirely (don't leave it empty) only if genuinely nothing was gathered
+     for it — `Seed Ideas` is the one most often skipped:
+
+     ```
+     # <Page/feature name>
+
+     ## How Might We
+
+     How might we <the real design tension this feature has to resolve,
+     framed as a question — not "how might we build X">?
+
+     ## Background
+
+     <Why this exists, who's affected today, what's actually at stake.>
+
+     ## Audience
+
+     <Who uses it, on what device/context, what they already know coming in.>
+
+     ## Requirements
+
+     - <Concrete must-haves, as a list — content, actions, states.>
+     - Brand: <token sheet name in tokens/, or "neutral">
+     - Reference: <"none" or a note pointing at reference/>
+
+     ## Seed Ideas
+
+     <Any half-formed directions they already mentioned — omit if none given.>
+
+     ## Success Metrics
+
+     <How success gets judged, if they have something in mind.>
+
+     ## Sprint Questions
+
+     <The real assumptions a Validate session with users would need to
+     test before any direction ships — not a restatement of Success Metrics.>
+
+     ## Out of Scope
+
+     <What this explicitly does not cover, so a direction doesn't sprawl.>
+
+     ## Fidelity
+
+     <Usually just "two tiers per direction, per this repo's convention" —
+     only worth a real paragraph if the brief wants something non-default.>
+     ```
 
 6. **Confirm and offer the next step.** Show them the written brief.md path
    and ask if they want mockups generated now (hands off to
