@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cover</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #f9fafb;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --accent: #4f46e5;
+    --accent-soft: #eef2ff;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1000px; height: 420px; overflow: hidden; }
+  body {
+    background: var(--bg);
+    font-family: var(--font);
+    color: var(--text);
+    position: relative;
+  }
+
+  .grain {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 14% 20%, var(--accent-soft) 0%, transparent 45%),
+      radial-gradient(circle at 88% 82%, var(--accent-soft) 0%, transparent 40%);
+  }
+
+  .stage {
+    position: relative;
+    height: 100%;
+  }
+
+  .diagram {
+    position: absolute;
+    left: 50%;
+    top: 46%;
+    transform: translate(-50%, -50%);
+    width: 640px;
+    height: 340px;
+  }
+
+  svg { width: 100%; height: 100%; overflow: visible; }
+
+  .node {
+    fill: #fff;
+    stroke: var(--border);
+    stroke-width: 2.5;
+  }
+  .node.root { stroke: var(--text); stroke-width: 3; }
+  .node.lofi { stroke: #9ca3af; }
+  .node.hifi { fill: var(--accent); stroke: var(--accent); }
+  .edge { stroke: #c7d2fe; stroke-width: 3; fill: none; }
+
+  .tag {
+    position: absolute;
+    left: 50%;
+    bottom: 46px;
+    transform: translateX(-50%);
+    font-family: var(--mono);
+    font-size: 16px;
+    color: var(--muted);
+  }
+  .tag b { color: var(--text); font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="grain"></div>
+  <div class="stage">
+    <div class="diagram">
+      <svg viewBox="0 0 300 260">
+        <path class="edge" d="M 20 130 C 70 130, 70 40, 130 40" />
+        <path class="edge" d="M 20 130 C 70 130, 70 130, 130 130" />
+        <path class="edge" d="M 20 130 C 70 130, 70 220, 130 220" />
+
+        <path class="edge" d="M 150 40 C 190 40, 190 15, 230 15" />
+        <path class="edge" d="M 150 40 C 190 40, 190 65, 230 65" />
+        <path class="edge" d="M 150 130 C 190 130, 190 105, 230 105" />
+        <path class="edge" d="M 150 130 C 190 130, 190 155, 230 155" />
+        <path class="edge" d="M 150 220 C 190 220, 190 195, 230 195" />
+        <path class="edge" d="M 150 220 C 190 220, 190 245, 230 245" />
+
+        <circle class="node root" cx="20" cy="130" r="11" />
+
+        <circle class="node" cx="140" cy="40" r="9" />
+        <circle class="node" cx="140" cy="130" r="9" />
+        <circle class="node" cx="140" cy="220" r="9" />
+
+        <circle class="node lofi" cx="238" cy="15" r="6.5" />
+        <circle class="node hifi" cx="238" cy="65" r="6.5" />
+        <circle class="node lofi" cx="238" cy="105" r="6.5" />
+        <circle class="node hifi" cx="238" cy="155" r="6.5" />
+        <circle class="node lofi" cx="238" cy="195" r="6.5" />
+        <circle class="node hifi" cx="238" cy="245" r="6.5" />
+      </svg>
+    </div>
+    <div class="tag">one <b>brief.md</b> &rarr; 3 directions &times; 2 fidelity tiers</div>
+  </div>
+</body>
+</html>

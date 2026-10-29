@@ -16,52 +16,50 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    width: 1280px;
-    height: 380px;
+    width: 800px;
     background: var(--bg);
     font-family: var(--font);
     color: var(--text);
-    padding: 34px 40px;
+    padding: 26px 24px 22px;
   }
 
   .track {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
+    gap: 8px;
   }
 
   .day {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 18px 16px 18px;
-    min-height: 176px;
+    border-radius: 9px;
+    padding: 14px 10px 12px;
     display: flex;
     flex-direction: column;
     position: relative;
   }
   .day .num {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.05em;
     color: var(--muted);
     text-transform: uppercase;
   }
   .day h2 {
-    font-size: 19px;
+    font-size: 15px;
     font-weight: 700;
-    margin-top: 7px;
+    margin-top: 5px;
     letter-spacing: -0.01em;
   }
   .day p {
-    margin-top: 8px;
-    font-size: 13px;
-    line-height: 1.45;
+    margin-top: 7px;
+    font-size: 12px;
+    line-height: 1.4;
     color: var(--muted);
   }
   .day .who {
     margin-top: auto;
-    padding-top: 12px;
+    padding-top: 10px;
     font-size: 11px;
     font-weight: 600;
     color: #9ca3af;
@@ -79,59 +77,58 @@
   .badge {
     position: absolute;
     top: -10px;
-    left: 14px;
+    left: 10px;
     background: var(--accent);
     color: #fff;
     font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    padding: 4px 9px;
+    padding: 3px 8px;
     border-radius: 9999px;
+    white-space: nowrap;
   }
   .badge.ghost { background: #fff; color: var(--accent); border: 1.5px solid var(--accent); }
 
   .bracket-row {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
-    margin-top: 4px;
+    gap: 8px;
+    margin-top: 2px;
   }
   .bracket {
     grid-column: 2 / 3;
-    height: 18px;
+    height: 16px;
     border-left: 2px solid var(--accent);
     border-right: 2px solid var(--accent);
     border-bottom: 2px solid var(--accent);
-    border-radius: 0 0 8px 8px;
+    border-radius: 0 0 7px 7px;
     position: relative;
   }
   .bracket::after {
     content: "";
     position: absolute;
     left: 50%;
-    bottom: -12px;
+    bottom: -11px;
     width: 2px;
-    height: 12px;
+    height: 11px;
     background: var(--accent);
   }
 
   .note-row {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
-    margin-top: 12px;
+    margin-top: 13px;
+    display: flex;
+    justify-content: center;
   }
   .note {
-    grid-column: 1 / 4;
-    justify-self: center;
     background: var(--text);
     color: #fff;
     border-radius: 8px;
-    padding: 9px 16px;
+    padding: 10px 18px;
     font-size: 13px;
     font-weight: 600;
-    white-space: nowrap;
+    text-align: center;
+    line-height: 1.4;
   }
   .note span { color: #a5b4fc; font-weight: 500; }
 </style>
@@ -150,8 +147,8 @@
       <div class="badge">Automated</div>
       <div class="num">Day 2</div>
       <h2>Sketch</h2>
-      <p>Produce several genuinely different directions — not variations of one.</p>
-      <div class="who">Output is quantity of options</div>
+      <p>Several genuinely different directions, not variations of one.</p>
+      <div class="who">Output is quantity</div>
     </div>
 
     <div class="day">
@@ -165,14 +162,14 @@
       <div class="badge ghost">Head start</div>
       <div class="num">Day 4</div>
       <h2>Prototype</h2>
-      <p>Build the winner up to something real enough to react to.</p>
-      <div class="who">hifi tier lands here</div>
+      <p>Build the winner up to something real.</p>
+      <div class="who">hifi lands here</div>
     </div>
 
     <div class="day">
       <div class="num">Day 5</div>
       <h2>Validate</h2>
-      <p>Put it in front of five real users.</p>
+      <p>Put it in front of real users.</p>
       <div class="who">Needs real users</div>
     </div>
   </div>
@@ -180,7 +177,7 @@
   <div class="bracket-row"><div class="bracket"></div></div>
 
   <div class="note-row">
-    <div class="note">One brief in <span>→</span> a handful of distinct directions out, at two fidelity tiers</div>
+    <div class="note">One brief in <span>&rarr;</span> a handful of distinct directions out, at two fidelity tiers</div>
   </div>
 
 </body>

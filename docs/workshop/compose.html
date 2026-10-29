@@ -1,0 +1,42 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+body{margin:0;font-family:-apple-system,system-ui,sans-serif;background:#f4f3ef;color:#1a1a1a}
+.slide{width:1600px;box-sizing:border-box;padding:56px 64px;display:none;flex-direction:column}
+.slide.on{display:flex}
+h1{font-size:44px;margin:0 0 8px;letter-spacing:-.02em}
+p.sub{font-size:22px;color:#555;margin:0 0 36px}
+.row{display:flex;gap:28px;flex:1;align-items:flex-start}
+figure{margin:0;flex:1}
+figure img{width:100%;border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.14);display:block}
+figure img{border:1px solid #ddd}figcaption{font-size:18px;margin-top:14px;color:#333}
+figcaption b{display:block;font-size:20px;color:#1a1a1a}
+.arrow{align-self:center;font-size:56px;color:#999}
+</style></head><body>
+<section class="slide" id="three">
+  <h1>One brief. Three genuinely different directions.</h1>
+  <p class="sub">Same pricing-page brief, about 4 minutes. Three different ideas about how to sell the plan, not three recolors of one layout.</p>
+  <div class="row">
+    <figure><img src="pricing-v1-lofi-full.png"><figcaption><b>Comparison table</b>Every feature side by side, for careful buyers</figcaption></figure>
+    <figure><img src="pricing-v2-lofi-full.png"><figcaption><b>Recommended card</b>One clear default, decide in seconds</figcaption></figure>
+    <figure><img src="pricing-v3-lofi-full.png"><figcaption><b>Value narrative</b>Show what you get first, price at the end</figcaption></figure>
+  </div>
+</section>
+<section class="slide" id="tiers">
+  <h1>Pick the structure. The hi-fi is already there.</h1>
+  <p class="sub">Every direction comes at both fidelities. Settle the structure in grayscale, then show users the real thing.</p>
+  <div class="row">
+    <figure><img src="pricing-v2-lofi.png"><figcaption><b>Lofi</b>Argue about layout and flow, not colors</figcaption></figure>
+    <div class="arrow">→</div>
+    <figure><img src="pricing-v2-hifi.png"><figcaption><b>Hifi</b>Your brand tokens, real enough to test with users</figcaption></figure>
+  </div>
+</section>
+<section class="slide" id="login">
+  <h1>Works for any screen, not just marketing pages.</h1>
+  <p class="sub">Login flow brief, three wireframes. Easy to argue about structure when nothing looks finished yet.</p>
+  <div class="row">
+    <figure><img src="login-v1-lofi.png"><figcaption><b>Progressive</b>One field at a time</figcaption></figure>
+    <figure><img src="login-v2-lofi.png"><figcaption><b>Split screen</b>Brand story next to the form</figcaption></figure>
+    <figure><img src="login-v3-lofi.png"><figcaption><b>Passkey first</b>No password by default</figcaption></figure>
+  </div>
+</section>
+<script>document.getElementById(new URLSearchParams(location.search).get("s")||'three').classList.add('on')</script>
+</body></html>
